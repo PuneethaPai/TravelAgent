@@ -59,7 +59,6 @@ function sendMessage(event) {
     request({
       url: 'https://graph.facebook.com/v2.6/me/messages',
       qs: {access_token: 'EAAPfT94PkckBAPqY1ZAFgtMecs7hRQnF4bgh7yu1xeBft4pKx7wVgwldZCangBx6PYPInwwTkL6ZBaL64gLCT7PBrwyqBllS2eYnv2eJBGRgMZAKnh1X8volYUaaCDPZCnLVLAcalF9EV96VLVlG8iGQuqZAQey8dqk0zDLyROMgZDZD'},
-//      qs: {access_token: 'EAAD8eVS50pcBANorzUSJRFgoYXHZBr9ljTJWxDsAPXs8MiapzVa85t9Egx4wyKri9QbvXZANmLR5pu8ifDHI95RMEjZCED76CDe3X7ZB5WGg4UUn9xlW3ss6IfkcInM1XVeN11nmltB7XhHHPwK23hg0eZCSgymRmhXKHIDdPAR0RKrgZA9vKa'},
       method: 'POST',
       json: {
         recipient: {id: sender},
@@ -99,13 +98,17 @@ app.post('/ai', (req, res) => {
         let json = JSON.parse(response.body);
         let journeys = json.OutboundJournies
         let list_len=journeys.length
-        let schedule=""
+        let schedule=[]
         for(var i=0; i<list_len; i++){
           var train_data = journeys[i].Legs;
           var fare=journeys[i].Tickets[0].Fare
-          let train="start: "+train_data[0].OriginDepartureTime.toString()+"\n"+"reach: "+train_data[0].DestinationArrivalTime.toString()+"\n"+"Duration: "+train_data[0].Duration.toString()+"\n"+"Fare: "+fare.toString()+"\n"
-          train+="\n\n"
-          schedule+=train
+          let train={
+            start:train_data[0].OriginDepartureTime.toString(),
+            reach:train_data[0].DestinationArrivalTime.toString(),
+            Duration:train_data[0].Duration.toString(),
+            Fare:fare.toString()
+          }
+          schedule.push(train)
         }
         console.log(schedule);
         return res.json({
