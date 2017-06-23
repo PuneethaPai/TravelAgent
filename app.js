@@ -31,7 +31,6 @@ app.get('/webhook', (req, res) => {
 
 /* Handling all messenges */
 app.post('/webhook', (req, res) => {
-  console.log(req.body);
   if (req.body.object === 'page') {
     req.body.entry.forEach((entry) => {
       entry.messaging.forEach((event) => {
@@ -44,34 +43,12 @@ app.post('/webhook', (req, res) => {
   }
 });
 
-
-// function sendMessage(event) {
-//   let sender = event.sender.id;
-//   let text = event.message.text;
-
-//   request({
-//     url: 'https://graph.facebook.com/v2.6/me/messages',
-//     qs: {access_token: 'EAAPfT94PkckBAPqY1ZAFgtMecs7hRQnF4bgh7yu1xeBft4pKx7wVgwldZCangBx6PYPInwwTkL6ZBaL64gLCT7PBrwyqBllS2eYnv2eJBGRgMZAKnh1X8volYUaaCDPZCnLVLAcalF9EV96VLVlG8iGQuqZAQey8dqk0zDLyROMgZDZD'},
-//     method: 'POST',
-//     json: {
-//       recipient: {id: sender},
-//       message: {text: text}
-//     }
-//   }, function (error, response) {
-//     if (error) {
-//         console.log('Error sending message: ', error);
-//     } else if (response.body.error) {
-//         console.log('Error: ', response.body.error);
-//     }
-//   });
-// }
-
 const apiaiApp = require('apiai')(ClientAccessToken);
 
 function sendMessage(event) {
   let sender = event.sender.id;
   let text = event.message.text;
-
+  console.log("Sender: " + sender + "; Mesage: " + text);
   let apiai = apiaiApp.textRequest(text, {
     sessionId: 'tabby_cat' // use any arbitrary id
   });
@@ -108,8 +85,6 @@ app.post('/ai', (req, res) => {
   let source = req.body.result.parameters['source'];
   let destination = req.body.result.parameters['destination'];
   let date = req.body.result.parameters['journey-date'];
-  console.log(date);
-  console.log(source);
   if (req.body.result.action === 'fetch_schedule' && source!="" && destination!="" && date!="") {
     let options = {
     url: 'https://et2-fasttrackapi.ttlnonprod.com/v1/Search?journeyRequest.origin=EUS&journeyRequest.destination=MAN&journeyRequest.outboundDate=2017-06-23&journeyRequest.numberOfAdults=1',
