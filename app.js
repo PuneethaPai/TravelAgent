@@ -44,7 +44,6 @@ app.post('/webhook', (req, res) => {
 });
 
 const apiaiApp = require('apiai')(ClientAccessToken);
-
 function sendMessage(event) {
   let sender = event.sender.id;
   let text = event.message.text;
@@ -79,11 +78,21 @@ function sendMessage(event) {
 
   apiai.end();
 }
+var recent_schedule=[]
+var global_source="London"
+var global_destination="Manchester"
+var global_date = "28-07-2017"
+var global_seats=1
 
 app.post('/ai', (req, res) => {
   let source = req.body.result.parameters['source'];
+  global_source=source
   let destination = req.body.result.parameters['destination'];
+  global_destination=destination
   let date = req.body.result.parameters['journey-date'];
+  global_date=date
+  let seat=parseInt(req.body.result.parameters['seats'], 10);
+  global_seats=seat
   if (req.body.result.action === 'fetch_schedule' && source!="" && destination!="" && date!="") {
     let options = {
     url: 'https://et2-fasttrackapi.ttlnonprod.com/v1/Search',
@@ -119,6 +128,7 @@ app.post('/ai', (req, res) => {
           schedule.push(train)
         }
         console.log(schedule);
+        recent_schedule=schedule
         return res.json({
           speech:schedule,
           displayText: schedule,
@@ -131,4 +141,24 @@ app.post('/ai', (req, res) => {
             errorType: 'I failed to look up the Schedule'}});
       }})
   }
+  if(req.body.result.action === 'book_ticket' && recent_schedule.length>0){
+  let ordinal=parseInt(req.body.result.parameters['ordinal'], 10)-1
+  let selected_start=recent_schedule[ordinal].start
+  let selected_end=recent_schedule[ordinal].reach
+  let selected_duration=recent_schedule[ordinal].Duration
+  let selected_fare=parseInt(recent_schedule[ordinal].Fare, 10)*global_seats
+  let summary="Journey Summary "+"\n"+"Train Starts From "+global_source+" at "+selected_start+"\n"+"Reaches "+global_destination+" by "+selected_end+"\n"+"Cost Of Each Ticket "+selected_fare+"\n"
+  console.log(summary);
+  return res.json({
+                      speech:summary,
+                      displayText: summary,
+                      source: 'book_ticket'
+                    });
+  }else if(recent_schedule.length=0) {
+          return res.json({
+                    speech:"Sorry Incorrect Operation",
+                    displayText: "Sorry Incorrect Operation",
+                    source: 'book_ticket'
+                  });
+         }
   });
