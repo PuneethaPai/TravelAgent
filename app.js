@@ -99,7 +99,7 @@ app.post('/ai', (req, res) => {
     method: 'GET',
     qs:{
         'journeyRequest' : {
-            'origin': 'EUS',
+            'origin': '182',
             'destination': 'MAN',
             'outboundDate': date,
             'numberOfAdults' : 1
@@ -115,17 +115,21 @@ app.post('/ai', (req, res) => {
         let json = JSON.parse(response.body);
         let journeys = json.OutboundJournies
         let list_len=journeys.length
-        let schedule=[]
+        let schedule="Please select the train you would like to book"+"\n\n"
         for(var i=0; i<list_len; i++){
+          var count=i+1
           var train_data = journeys[i].Legs;
           var fare=journeys[i].Tickets[0].Fare
-          let train={
-            start:train_data[0].OriginDepartureTime.toString(),
-            reach:train_data[0].DestinationArrivalTime.toString(),
-            Duration:train_data[0].Duration.toString(),
-            Fare:fare.toString()
-          }
-          schedule.push(train)
+          let train = "#"+count+" start: "+train_data[0].OriginDepartureTime.toString()+"\n"+"   reach: "+train_data[0].DestinationArrivalTime.toString()+"\n"+"   Duration: "+train_data[0].Duration.toString()+"\n"+"   Fare: "+fare.toString()+"\n"
+          train+="\n"
+          schedule+=train
+//          let train={
+//            start:train_data[0].OriginDepartureTime.toString(),
+//            reach:train_data[0].DestinationArrivalTime.toString(),
+//            Duration:train_data[0].Duration.toString(),
+//            Fare:fare.toString()
+//          }
+//          schedule.push(train)
         }
         console.log(schedule);
         recent_schedule=schedule
