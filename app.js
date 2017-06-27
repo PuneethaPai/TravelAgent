@@ -86,8 +86,16 @@ app.post('/ai', (req, res) => {
   let date = req.body.result.parameters['journey-date'];
   if (req.body.result.action === 'fetch_schedule' && source!="" && destination!="" && date!="") {
     let options = {
-    url: 'https://et2-fasttrackapi.ttlnonprod.com/v1/Search?journeyRequest.origin=EUS&journeyRequest.destination=MAN&journeyRequest.outboundDate=2017-06-23&journeyRequest.numberOfAdults=1',
+    url: 'https://et2-fasttrackapi.ttlnonprod.com/v1/Search',
     method: 'GET',
+    qs:{
+        'journeyRequest' : {
+            'origin': 'EUS',
+            'destination': 'MAN',
+            'outboundDate': date,
+            'numberOfAdults' : 1
+        }
+    },
     headers: {
             "Accept": "application/json",
             "TocIdentifier": "vtMobileWeb"
