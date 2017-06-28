@@ -3,6 +3,7 @@
 const
   bodyParser = require('body-parser'),
   config = require('config'),
+  assets=require('./assets/stations.json'),
   express = require('express'),
   request = require('request');
 
@@ -78,6 +79,7 @@ function sendMessage(event) {
 
   apiai.end();
 }
+var stations=require("./assets/stations.json")
 var recent_schedule=[]
 var global_source="London"
 var global_destination="Manchester"
@@ -90,6 +92,8 @@ app.post('/ai', (req, res) => {
   let date = req.body.result.parameters['journey-date'];
   let seat=parseInt(req.body.result.parameters['seats'], 10);
   if (req.body.result.action === 'fetch_schedule' && source!="" && destination!="" && date!="") {
+    let source_code=stations[source.toUpperCase()];
+    let destination_code=stations[destination.toUpperCase()]
     global_source=source;
     global_destination=destination;
     global_date=date;
@@ -99,8 +103,8 @@ app.post('/ai', (req, res) => {
     method: 'GET',
     qs:{
         'journeyRequest' : {
-            'origin': '182',
-            'destination': 'MAN',
+            'origin': source_code,
+            'destination': destination_code,
             'outboundDate': date,
             'numberOfAdults' : seat
         }
@@ -183,7 +187,7 @@ app.post('/ai', (req, res) => {
      let selected_end=recent_schedule[index].reach;
      let selected_duration=recent_schedule[index].Duration;
      let selected_fare=parseInt(recent_schedule[index].Fare, 10)*global_seats;
-     let summary="Journey Summary "+"\n"+"Train Starts From "+global_source+" at "+selected_start+"\n"+"Reaches "+global_destination+" by "+selected_end+"\n"+"Journey Date "+global_date+"\n"+"Total Cost £"+selected_fare+"\n"+"Should I go Ahead With this and Confirm Your Ticket?\n";
+     let summary="Your Summary "+"\n"+"Train Starts From "+global_source+" at "+selected_start+"\n"+"Reaches "+global_destination+" by "+selected_end+"\n"+"Journey Date "+global_date+"\n"+"Total Cost £"+selected_fare+"\n"+"Should I go Ahead With this and Confirm Your Ticket?\n";
      console.log(summary);
      return res.json({
          speech:summary,
@@ -208,7 +212,7 @@ app.post('/ai', (req, res) => {
     let selected_end=recent_schedule[index].reach;
     let selected_duration=recent_schedule[index].Duration;
     let selected_fare=parseInt(recent_schedule[index].Fare, 10)*global_seats;
-    let summary="Journey Summary "+"\n"+"Train Starts From "+global_source+" at "+selected_start+"\n"+"Reaches "+global_destination+" by "+selected_end+"\n"+"Journey Date "+global_date+"\n"+"Total Cost £"+selected_fare+"\n"+"Should I go Ahead With this and Confirm Your Ticket?\n";
+    let summary="Your "+"\n"+"Train Starts From "+global_source+" at "+selected_start+"\n"+"Reaches "+global_destination+" by "+selected_end+"\n"+"Journey Date "+global_date+"\n"+"Total Cost £"+selected_fare+"\n"+"Should I go Ahead With this and Confirm Your Ticket?\n";
     console.log(summary);
     return res.json({
        speech:summary,
@@ -240,7 +244,7 @@ app.post('/ai', (req, res) => {
        let selected_end=recent_schedule[index].reach;
        let selected_duration=recent_schedule[index].Duration;
        let selected_fare=parseInt(recent_schedule[index].Fare, 10)*global_seats;
-       let summary="Journey Summary "+"\n"+"Train Starts From "+global_source+" at "+selected_start+"\n"+"Reaches "+global_destination+" by "+selected_end+"\n"+"Journey Date "+global_date+"\n"+"Total Cost £"+selected_fare+"\n"+"Should I go Ahead With this and Confirm Your Ticket?\n";
+       let summary="Your "+"\n"+"Train Starts From "+global_source+" at "+selected_start+"\n"+"Reaches "+global_destination+" by "+selected_end+"\n"+"Journey Date "+global_date+"\n"+"Total Cost £"+selected_fare+"\n"+"Should I go Ahead With this and Confirm Your Ticket?\n";
        console.log(summary);
        return res.json({
                              speech:summary,
