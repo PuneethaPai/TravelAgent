@@ -92,8 +92,25 @@ app.post('/ai', (req, res) => {
   let date = req.body.result.parameters['journey-date'];
   let seat=parseInt(req.body.result.parameters['seats'], 10);
   if (req.body.result.action === 'fetch_schedule' && source!="" && destination!="" && date!="") {
+    console.log(source)
     let source_code=stations[source.toUpperCase()];
     let destination_code=stations[destination.toUpperCase()]
+    console.log(destination_code)
+    if(typeof destination_code == 'undefined'){
+    console.log("destination_code")
+    return res.json({
+                     speech:"The Source is Incorrect",
+                     displayText: "The Destination is Incorrect",
+                     source: 'fetch_schedule'
+                          });
+    }
+    if(!source_code){
+    return res.json({
+                    speech:"The Source is Incorrect",
+                    displayText: "The Source is Incorrect",
+                    source: 'fetch_schedule'
+                          });
+    }
     global_source=source;
     global_destination=destination;
     global_date=date;
