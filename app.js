@@ -5,12 +5,12 @@ const
   config = require('config'),
   assets=require('./assets/stations.json'),
   express = require('express'),
+  data=require('./data.js'),
   request = require('request');
 
 const app = express();
 const ClientAccessToken='80008143ef7e426e8ae929fa186012b3'
 const ClientValidationToken = config.get('validationToken');
-let post_data = "%3C%3Fxml+version%3D%221.0%22+encoding%3D%22UTF-8%22+standalone%3D%22yes%22%3F%3E%3CpurchaseTicketRequest+xmlns%3D%22http%3A%2F%2Fojp.nationalrail.co.uk%2Fschemas%2FFulfilmentHandoff%22%3E%3CrequestId%3E154f7b89-14f5-40b7-b33a-a5bc2428294f%3C%2FrequestId%3E%3CoriginCrs%3EEUS%3C%2ForiginCrs%3E%3CoriginName%3E%3C%2ForiginName%3E%3CoriginNlc%3E%3C%2ForiginNlc%3E%3CdestinationCrs%3EMAN%3C%2FdestinationCrs%3E%3CdestinationName%3EManchester+Piccadilly%3C%2FdestinationName%3E%3CdestinationNlc%3E%3C%2FdestinationNlc%3E%3CoutboundJourney%3E%3CdepartureDateTime%3E2017-08-10T12%3A20%3A00.000%2B01%3A00%3C%2FdepartureDateTime%3E%3CarrivalDateTime%3E2017-08-10T14%3A28%3A00.000%2B01%3A00%3C%2FarrivalDateTime%3E%3C%2FoutboundJourney%3E%3CoutboundFares%3E%3CTicketTypeDescription%3E%3C%2FTicketTypeDescription%3E%3CtotalFare%3E2200%3C%2FtotalFare%3E%3CticketType%3EVDS%3C%2FticketType%3E%3CadultFullFare%3E%3C%2FadultFullFare%3E%3CchildFullFare%3E0%3C%2FchildFullFare%3E%3CadultDiscountFare%3E0%3C%2FadultDiscountFare%3E%3CchildDiscountFare%3E0%3C%2FchildDiscountFare%3E%3CnumberOfFullFareAdults%3E1%3C%2FnumberOfFullFareAdults%3E%3CnumberOfFullFareChildren%3E0%3C%2FnumberOfFullFareChildren%3E%3CnumberOfDiscountFareAdults%3E0%3C%2FnumberOfDiscountFareAdults%3E%3CnumberOfDiscountFareChildren%3E0%3C%2FnumberOfDiscountFareChildren%3E%3CnumberOfRailcards%3E0%3C%2FnumberOfRailcards%3E%3CrouteCode%3E00474%3C%2FrouteCode%3E%3CfareOriginNlc%3E%3C%2FfareOriginNlc%3E%3CfareDestinationNlc%3E%3C%2FfareDestinationNlc%3E%3C%2FoutboundFares%3E%3C%2FpurchaseTicketRequest%3E"
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -33,7 +33,7 @@ app.get('/summary', function(req, res){
     let options = {
         uri : "https://m.buytickets.virgintrains.co.uk/buy/purchase_ticket_request",
         method : 'POST',
-        formData : post_data
+        formData : data.getPostData(fastrack_t
     }
     request(options, function(error, response, body){
         console.log(body);
@@ -73,28 +73,29 @@ function sendMessage(event) {
       method: 'POST',
       json: {
         recipient: {id: sender},
-        message:{attachment:{
-                       "type":"template",
-                       "payload":{
-                         "template_type":"generic",
-                         "elements":[
-                           {
-                             "title":"Do You Want to Book The Ticket",
-                             "subtitle":"The local area is due for record thunderstorms over the weekend.",
-                             "image_url":"https://www.thetrainline.com/m/public/00f6856c8fb412b329525bc1bcc2f98a.jpg",
-                             "buttons":[
-                               {
-                                 "type":"web_url",
-                                 "url":"https://53de080b.ngrok.io/summary",
-                                 "title":"Show Website"
-                               }
-                             ]
-                           }
-                         ]
-                       }
-                     }
-        }
-//        message: {text: aiText}
+//        message:{
+//        attachment:{
+//                       "type":"template",
+//                       "payload":{
+//                         "template_type":"generic",
+//                         "elements":[
+//                           {
+//                             "title":"Do You Want to Book The Ticket",
+//                             "subtitle":"The local area is due for record thunderstorms over the weekend.",
+//                             "image_url":"https://www.thetrainline.com/m/public/00f6856c8fb412b329525bc1bcc2f98a.jpg",
+//                             "buttons":[
+//                               {
+//                                 "type":"web_url",
+//                                 "url":"https://53de080b.ngrok.io/summary",
+//                                 "title":"Show Website"
+//                               }
+//                             ]
+//                           }
+//                         ]
+//                       }
+//                     }
+//        }
+        message: {text: aiText}
       }
     }, (error, response) => {
       if (error) {
@@ -117,7 +118,7 @@ var global_source="London"
 var global_destination="Manchester"
 var global_date = "28-07-2017"
 var global_seats=1
-
+var fastrack_ticket_data ={}
 app.post('/ai', (req, res) => {
   let source = req.body.result.parameters['source'];
   let destination = req.body.result.parameters['destination'];
@@ -126,7 +127,13 @@ app.post('/ai', (req, res) => {
   if (req.body.result.action === 'fetch_schedule' && source!="" && destination!="" && date!="") {
     console.log(source)
     let source_code=stations[source.toUpperCase()];
+
+    fastrack_ticket_data.origin_crs=source_code
+
     let destination_code=stations[destination.toUpperCase()]
+
+    fastrack_ticket_data.destination_crs=destination_code
+
     console.log(destination_code)
     if(typeof destination_code == 'undefined'){
     console.log("destination_code")
@@ -170,6 +177,13 @@ app.post('/ai', (req, res) => {
         let list_len=journeys.length;
         let schedule="Please select the train you would like to book"+"\n\n";
         let save_schedule=[];
+
+        fastrack_ticket_data.arrival_date_time=journeys[0].ArrivalDateTime
+        fastrack_ticket_data.departure_date_time=journeys[0].DepartureDateTime
+        fastrack_ticket_data.total_fare=journeys[0].Tickets[0].Fare
+        fastrack_ticket_data.ticket_type=journeys[0].Tickets[0].TicketType
+        fastrack_ticket_data.route_code=journeys[0].Tickets[0].RouteCode
+        console.log(fastrack_ticket_data)
         for(var i=0; i<list_len; i++){
           var count=i+1;
           var train_data = journeys[i].Legs;
@@ -199,6 +213,10 @@ app.post('/ai', (req, res) => {
             errorType: 'I failed to look up the Schedule'}});
       }})
   }
+
+
+  ///Tarkakke Nilukaddu
+
   let ordinal=parseInt(req.body.result.parameters['ordinal'], 10)-1;
   if(req.body.result.action === 'book_ticket' && recent_schedule.length>0){
   if((ordinal+1)>recent_schedule.length){
