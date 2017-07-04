@@ -3,7 +3,7 @@ function showJourneyList(ListViewData){
     console.log(list_len);
     elementList=[];
     for (let i = 1; i < list_len; i++){
-        let url = "https://e161f8cc.ngrok.io/summary?q=";
+        let url = "https://381e401e.ngrok.io/summary?q=";
         format={
             "title":ListViewData[i].duration.toString(),
             "subtitle": "Start:"+ListViewData[i].start+"\n"+"End:"+ListViewData[i].end+"\n"+"Fare:"+ListViewData[i].fare+"\n",

@@ -40,10 +40,10 @@ app.get('/summary', function(req, res){
     };
     console.log(data.getPostData(fastrackSummaryDetails.summaryList[index]));
     request(options, function(error, response, body){
-        // console.log(body);
+        console.log(body);
         res.body = body;
         res.response=response;
-        res.redirect('https://et2-m-virgintrains.ttlnonprod.com/journeySummaryPage');
+        res.redirect("https://et2-m-virgintrains.ttlnonprod.com/journeySummaryPage");
     })
 });
 /* Handling all messenges */
@@ -101,7 +101,7 @@ function sendMessage(event) {
                                        {
                                          "type":"web_url",
                                          "url":"https://53de080b.ngrok.io/summary",
-                                         "title":"Show Website"
+                                         "title":"Book"
                                        }
                                      ]
                                    }
