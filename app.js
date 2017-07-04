@@ -33,19 +33,16 @@ app.get('/webhook', (req, res) => {
 app.get('/summary', function(req, res){
     let index=parseInt(req.query.q, 10);
     console.log(index);
-    let options = {
-        uri : "https://et2-m-virgintrains.ttlnonprod.com/buy/purchase_ticket_request",
-        method : "POST",
-        journey : data.getPostData(fastrackSummaryDetails.summaryList[index])
-    };
-    console.log(data.getPostData(fastrackSummaryDetails.summaryList[index]));
-    request(options, function(error, response, body){
-        console.log(body);
-        res.body = body;
-        res.response=response;
-        res.redirect("https://et2-m-virgintrains.ttlnonprod.com/journeySummaryPage");
-    })
+
+    let html_data= "<form id='redir' action='https://et2-m-virgintrains.ttlnonprod.com/buy/purchase_ticket_request' method='POST'>"+
+        "<textarea rows='15' cols='50' name='journey' style='display: none'>"+data.getPostData(fastrackSummaryDetails.summaryList[index]).toString()+
+    "</textarea>"+
+        "</form>"+
+        "<script>document.getElementById('redir').submit()</script>";
+    console.log(html_data);
+    res.send(html_data);
 });
+
 /* Handling all messenges */
 app.post('/webhook', (req, res) => {
   if (req.body.object === 'page') {
@@ -130,6 +127,7 @@ function sendMessage(event) {
               console.log('Error: ', response.body.error);
           }
       });
+
  });
 
   apiai.on('error', (error) => {
