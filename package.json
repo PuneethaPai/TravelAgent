@@ -4,7 +4,7 @@
   "description": "A node server to interact with Facebook messenger app",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon src/app.js",
+    "start": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,6 +20,7 @@
     "config": "^1.26.1",
     "express": "^4.15.3",
     "nodemon": "^1.11.0",
+    "replaceall": "^0.1.6",
     "request": "^2.81.0",
     "selenium-webdriver": "^3.4.0"
   }
