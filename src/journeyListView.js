@@ -1,9 +1,12 @@
+const config = require('config');
+
+serverURL = config.serverURL;
+
 function showJourneyList(ListViewData){
     list_len=ListViewData.length;
-    console.log(list_len);
     elementList=[];
     for (let i = 1; i < list_len; i++){
-        let url = "https://381e401e.ngrok.io/summary?q=";
+        let url = serverURL + "summary?q=";
         format={
             "title":ListViewData[i].duration.toString(),
             "subtitle": "Start:"+ListViewData[i].start+"\n"+"End:"+ListViewData[i].end+"\n"+"Fare:"+ListViewData[i].fare+"\n",

@@ -38,14 +38,12 @@ app.get('/webhook', (req, res) => {
 });
 app.get('/summary', function(req, res){
     let index=parseInt(req.query.q, 10);
-    console.log(index);
 
     let html_data= "<form id='redir' action='https://et2-m-virgintrains.ttlnonprod.com/buy/purchase_ticket_request' method='POST'>"+
         "<textarea rows='15' cols='50' name='journey' style='display: none'>"+data.getPostData(fastrackSummaryDetails.summaryList[index]).toString()+
     "</textarea>"+
         "</form>"+
         "<script>document.getElementById('redir').submit()</script>";
-    console.log(html_data);
     res.send(html_data);
 });
 
