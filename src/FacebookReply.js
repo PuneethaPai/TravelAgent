@@ -4,9 +4,12 @@ const
     journeyList=require('./journeyListView.js'),
     request = require('request'),
     apiWebHook = require('./ApiWebHook.js');
+    config = require('config');
 
 let
-    listViewDetails = apiWebHook.listViewDetails;
+    listViewDetails = apiWebHook.listViewDetails,
+    preffered_train=apiWebHook.preferedTrain;
+    serverURL = config.serverURL;
 
 function sendMessage(event) {
   let sender = event.sender.id;
@@ -41,13 +44,13 @@ function sendMessage(event) {
                                  "template_type":"generic",
                                  "elements":[
                                    {
-                                     "title":"Do You Want to Book The Ticket",
-                                     "subtitle":"The local area is due for record thunderstorms over the weekend.",
+                                     "title":preffered_train.duration,
+                                     "subtitle":"Start:"+preffered_train.start+"\n"+"End:"+preffered_train.end+"\n"+"Fare:"+preffered_train.fare+"\n",
                                      "image_url":"https://www.thetrainline.com/m/public/00f6856c8fb412b329525bc1bcc2f98a.jpg",
                                      "buttons":[
                                        {
                                          "type":"web_url",
-                                         "url":"https://53de080b.ngrok.io/summary",
+                                         "url":serverURL+"summary?q="+preffered_train.index,
                                          "title":"Book"
                                        }
                                      ]

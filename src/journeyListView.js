@@ -5,7 +5,7 @@ serverURL = config.serverURL;
 function showJourneyList(ListViewData){
     list_len=ListViewData.length;
     elementList=[];
-    for (let i = 1; i < list_len; i++){
+    for (let i = 0; i < list_len; i++){
         let url = serverURL + "summary?q=";
         format={
             "title":ListViewData[i].duration.toString(),

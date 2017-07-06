@@ -2,17 +2,17 @@ const
     request = require('request'),
     stations = require("../assets/stations.json");
 
-var
-    recent_schedule=[],
-    global_source="London",
-    global_destination="Manchester",
+let recent_schedule = [],
+    global_source = "London",
+    global_destination = "Manchester",
     global_date = "28-07-2017",
-    global_seats=1,
-    fastrackSummaryDetails ={},
-    listViewDetails={};
+    global_seats = 1,
+    fastrackSummaryDetails = {},
+    listViewDetails = {},
+    preferedTrain={};
 
-
-function apiWebHookHandler(req, res){
+function apiWebHookHandler(req, res) {
+    let i;
     let source = req.body.result.parameters['source'];
     let destination = req.body.result.parameters['destination'];
     let date = req.body.result.parameters['journey-date'];
@@ -63,6 +63,7 @@ function apiWebHookHandler(req, res){
                     'origin': source_code,
                     'destination': destination_code,
                     'outboundDate': date,
+
                     'numberOfAdults': seat
                 }
             },
@@ -80,10 +81,10 @@ function apiWebHookHandler(req, res){
                 let schedule = "Please select the train you would like to book" + "\n\n";
                 let save_schedule = [];
                 let summaryList = [];
-                let listViewList=[];
-                for (let i = 0; i < list_len; i++) {
+                let listViewList = [];
+                for (let i = 1; i < list_len; i++) {
                     let tripSummary = {};
-                    let listViewData={};
+                    let listViewData = {};
                     let count = i + 1;
                     let train_data = journeys[i].Legs;
                     let fare = journeys[i].Tickets[0].Total;
@@ -98,14 +99,14 @@ function apiWebHookHandler(req, res){
                     tripSummary.ticket_type = journeys[i].Tickets[0].TicketType;
                     tripSummary.route_code = journeys[i].Tickets[0].RouteCode;
 
-                    listViewData.start=train_data[0].OriginDepartureTime.toString();
-                    listViewData.end=train_data[0].DestinationArrivalTime.toString();
-                    listViewData.duration=train_data[0].Duration.toString();
-                    listViewData.fare=journeys[i].Tickets[0].Fare.toString();
+                    listViewData.start = train_data[0].OriginDepartureTime.toString();
+                    listViewData.end = train_data[0].DestinationArrivalTime.toString();
+                    listViewData.duration = train_data[0].Duration.toString();
+                    listViewData.fare = journeys[i].Tickets[0].Fare.toString();
                     summaryList.push(tripSummary);
                     listViewList.push(listViewData);
                 }
-                listViewDetails.journeyList=listViewList;
+                listViewDetails.journeyList = listViewList;
                 fastrackSummaryDetails.summaryList = summaryList;
 
                 console.log(fastrackSummaryDetails);
@@ -126,116 +127,72 @@ function apiWebHookHandler(req, res){
         })
     }
 
+    let preference = req.body.result.parameters['Preferences'];
 
-    ///Tarkakke Nilukaddu
-
-    let ordinal = parseInt(req.body.result.parameters['ordinal'], 10) - 1;
-    if (req.body.result.action === 'book_ticket' && recent_schedule.length > 0) {
-        if ((ordinal + 1) > recent_schedule.length) {
-            return res.json({
-                speech: "The Option Can not be Choosed",
-                displayText: "The Option Can not be Choosed",
-                source: 'book_ticket'
-            });
-        }
-        else {
-            console.log(recent_schedule);
-            console.log(ordinal);
-            let selected_start = recent_schedule[ordinal]['start'];
-            let selected_end = recent_schedule[ordinal].reach;
-            let selected_duration = recent_schedule[ordinal].Duration;
-            let selected_fare = parseInt(recent_schedule[ordinal].Fare, 10) * global_seats;
-            let summary = "Journey Summary " + "\n" + "Train Starts From " + global_source + " at " + selected_start + "\n" + "Reaches " + global_destination + " by " + selected_end + "\n" + "Journey Date " + global_date + "\n" + "Total Cost £" + selected_fare + "\n" + "Should I go Ahead With this and Confirm Your Ticket?\n";
-            console.log(summary);
-            return res.json({
-                speech: summary,
-                displayText: summary,
-                source: 'book_ticket'
-            });
-        }
+    function PreferenceDetailExtract(index) {
+        preferedTrain.start = listViewDetails.journeyList[index].start;
+        preferedTrain.end = listViewDetails.journeyList[index].end;
+        preferedTrain.duration = listViewDetails.journeyList[index].duration;
+        preferedTrain.fare = parseInt(listViewDetails.journeyList[index].fare, 10) * global_seats;
+        preferedTrain.index=index;
+        console.log(preferedTrain);
+        return res.json({
+            speech: "Confirm",
+            displayText: "Confirm",
+            source: 'book_ticket'
+        });
     }
-    let preference = req.body.result.parameters['Preferences']
-    if (req.body.result.action === 'apply_preferences' && preference != "" && recent_schedule.length > 0) {
-        console.log("Ima here")
-        var itin_length = recent_schedule.length
-        if (preference == "earliest") {
-            console.log("Ima here in Earliest")
-            let random_ordinal = 0
-            let index = random_ordinal
-            let selected_start = recent_schedule[index]['start'];
-            let selected_end = recent_schedule[index].reach;
-            let selected_duration = recent_schedule[index].Duration;
-            let selected_fare = parseInt(recent_schedule[index].Fare, 10) * global_seats;
-            let summary = "Your Summary " + "\n" + "Train Starts From " + global_source + " at " + selected_start + "\n" + "Reaches " + global_destination + " by " + selected_end + "\n" + "Journey Date " + global_date + "\n" + "Total Cost £" + selected_fare + "\n" + "Should I go Ahead With this and Confirm Your Ticket?\n";
-            console.log(summary);
-            return res.json({
-                speech: summary,
-                displayText: summary,
-                source: 'book_ticket'
-            });
-        } else if (preference == "cheapest") {
-            console.log("Ima here in Cheapest")
-            let min_cost = 1000
-            let cheapest = 0
-            for (var i = 0; i < itin_length; i++) {
-                let train = recent_schedule[i]
-                let cost = parseInt(train.Fare, 10)
+
+    if (req.body.result.action === 'apply_preferences' && preference !== "" && listViewDetails.journeyList.length > 0) {
+        let itin_length = listViewDetails.journeyList.length;
+
+        console.log(itin_length);
+
+        if (preference === "earliest") {
+            console.log("Ima here in Earliest");
+            let index = 0;
+            return PreferenceDetailExtract(index);
+        } else if (preference === "cheapest") {
+            console.log("I'am here in Cheapest");
+            let min_cost = 1000;
+            let cheapest = 0;
+            for (i = 0; i < itin_length; i++) {
+                let train = listViewDetails.journeyList[i];
+                let cost = parseInt(train.fare, 10);
                 if (min_cost > cost) {
-                    min_cost = cost
+                    min_cost = cost;
                     cheapest = i
                 }
             }
-            let index = cheapest
             console.log(cheapest);
-            let selected_start = recent_schedule[index]['start'];
-            let selected_end = recent_schedule[index].reach;
-            let selected_duration = recent_schedule[index].Duration;
-            let selected_fare = parseInt(recent_schedule[index].Fare, 10) * global_seats;
-            let summary = "Your " + "\n" + "Train Starts From " + global_source + " at " + selected_start + "\n" + "Reaches " + global_destination + " by " + selected_end + "\n" + "Journey Date " + global_date + "\n" + "Total Cost £" + selected_fare + "\n" + "Should I go Ahead With this and Confirm Your Ticket?\n";
-            console.log(summary);
-            return res.json({
-                speech: summary,
-                displayText: summary,
-                source: 'book_ticket'
-            });
+            return PreferenceDetailExtract(cheapest);
+        } else if (preference === "fastest") {
+            console.log("I am here in Fastest");
+            let min_dur = 1000;
+            let fastest = 0;
+            for (i = 0; i < itin_length; i++) {
+                let train = listViewDetails.journeyList[i];
 
-
-        } else if (preference == "fastest") {
-            console.log("I am here in Fastest")
-            let min_dur = 1000
-            let earliest = 0
-            for (var i = 0; i < itin_length; i++) {
-                let train = recent_schedule[i]
-                var hr = recent_schedule[i].Duration.split(' ')[0].match(/\d/g)
+                let hr = listViewDetails.journeyList[i].duration.split(' ')[0].match(/\d/g);
                 hr = hr.join("");
-                var min = recent_schedule[i].Duration.split(' ')[1].match(/\d/g)
+                let min = listViewDetails.journeyList[i].duration.split(' ')[1].match(/\d/g);
                 min = min.join("");
-                console.log(hr)
-                console.log(min)
-                var dur = parseInt(hr, 10) * 60 + parseInt(min, 10)
+                console.log(hr);
+                console.log(min);
+
+                const dur = parseInt(hr, 10) * 60 + parseInt(min, 10);
                 if (min_dur > dur) {
-                    min_dur = dur
-                    earliest = i
+                    min_dur = dur;
+                    fastest = i
                 }
             }
-            let index = earliest
-            let selected_start = recent_schedule[index]['start'];
-            let selected_end = recent_schedule[index].reach;
-            let selected_duration = recent_schedule[index].Duration;
-            let selected_fare = parseInt(recent_schedule[index].Fare, 10) * global_seats;
-            let summary = "Your " + "\n" + "Train Starts From " + global_source + " at " + selected_start + "\n" + "Reaches " + global_destination + " by " + selected_end + "\n" + "Journey Date " + global_date + "\n" + "Total Cost £" + selected_fare + "\n" + "Should I go Ahead With this and Confirm Your Ticket?\n";
-            console.log(summary);
-            return res.json({
-                speech: summary,
-                displayText: summary,
-                source: 'book_ticket'
-            });
+            return PreferenceDetailExtract(fastest);
         }
     }
-};
-
-module.exports = {
-    fastrackSummaryDetails : fastrackSummaryDetails,
-    listViewDetails : listViewDetails,
-    apiWebHookHandler : apiWebHookHandler
 }
+module.exports = {
+    fastrackSummaryDetails: fastrackSummaryDetails,
+    listViewDetails: listViewDetails,
+    apiWebHookHandler: apiWebHookHandler,
+    preferedTrain:preferedTrain
+};
