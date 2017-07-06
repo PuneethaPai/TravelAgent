@@ -3,29 +3,24 @@ const
     stations = require("../assets/stations.json");
 
 let recent_schedule = [],
-    global_source = "London",
-    global_destination = "Manchester",
-    global_date = "28-07-2017",
     global_seats = 1,
     fastrackSummaryDetails = {},
     listViewDetails = {},
-    preferedTrain={};
+    preferedTrain={},
+    searchParameters = {};
 
 function apiWebHookHandler(req, res) {
-    let i;
-    let source = req.body.result.parameters['source'];
-    let destination = req.body.result.parameters['destination'];
-    let date = req.body.result.parameters['journey-date'];
-    let seat = parseInt(req.body.result.parameters['seats'], 10);
+    let source = req.body.result.parameters['source'],
+        destination = req.body.result.parameters['destination'],
+        date = req.body.result.parameters['journey-date'],
+        seat = parseInt(req.body.result.parameters['seats'], 10),
+        outboundTime = "";
+
     console.log("hello");
     if (req.body.result.action === 'fetch_schedule' && source !== "" && destination !== "" && date !== "") {
-        console.log(source);
-
         let source_code = stations[source.toUpperCase()];
         let destination_code = stations[destination.toUpperCase()];
 
-        // fastrackSummaryDetails.origin_crs = source_code;
-        // fastrackSummaryDetails.destination_crs = destination_code;
         listViewDetails.source=source;
         listViewDetails.destination=destination;
         listViewDetails.seats=seat;
@@ -49,12 +44,13 @@ function apiWebHookHandler(req, res) {
             });
         }
 
-///Not needed>
-        global_source = source;
-        global_destination = destination;
-        global_date = date;
-        global_seats = seat;
-///Not needed<
+        searchParameters = {
+            'origin': source_code,
+            'destination': destination_code,
+            'outboundDate': date,
+            'outboundTime': outboundTime,
+            'numberOfAdults': seat
+        }
 
         let options = {
             url: 'https://et2-fasttrackapi.ttlnonprod.com/v1/Search',
@@ -64,7 +60,7 @@ function apiWebHookHandler(req, res) {
                     'origin': source_code,
                     'destination': destination_code,
                     'outboundDate': date,
-
+                    'outboundTime': "",
                     'numberOfAdults': seat
                 }
             },
@@ -193,5 +189,6 @@ module.exports = {
     fastrackSummaryDetails: fastrackSummaryDetails,
     listViewDetails: listViewDetails,
     apiWebHookHandler: apiWebHookHandler,
-    preferedTrain:preferedTrain
+    preferedTrain:preferedTrain,
+    searchParameters:searchParameters
 };
