@@ -1,6 +1,6 @@
 const config = require('config');
 
-serverURL = config.serverURL;
+serverURL = process.env.serverURL || config.serverURL;
 
 function showJourneyList(ListViewData){
     list_len=ListViewData.length;

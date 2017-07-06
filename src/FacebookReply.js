@@ -9,7 +9,7 @@ const
 let
     listViewDetails = apiWebHook.listViewDetails,
     preffered_train=apiWebHook.preferedTrain;
-    serverURL = config.serverURL;
+    serverURL = process.env.serverURL || config.serverURL;
 
 function sendMessage(event) {
   let sender = event.sender.id;
