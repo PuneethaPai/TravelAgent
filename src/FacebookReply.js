@@ -7,9 +7,13 @@ const
     config = require('config');
 
 let
+    serverURL = process.env.serverURL || config.serverURL,
     listViewDetails = apiWebHook.listViewDetails,
-    preffered_train=apiWebHook.preferedTrain;
-    serverURL = process.env.serverURL || config.serverURL;
+    preffered_train=apiWebHook.preferedTrain,
+    showJourneyList = journeyList.showJourneyList,
+    getSearchURL = journeyList.getSearchURL;
+
+    config = require('config');
 
 function sendMessage(event) {
   let sender = event.sender.id;
@@ -30,7 +34,14 @@ function sendMessage(event) {
                                "type": "template",
                                "payload": {
                                    "template_type": "list",
-                                   "elements": journeyList.showJourneyList(listViewDetails)
+                                   "elements": showJourneyList(listViewDetails),
+                                   "buttons": [
+                                       {
+                                           "title": "View More",
+                                           "type": "web_url",
+                                           "url": getSearchURL(listViewDetails)
+                                       }
+                                   ]
                                }
                            }
                            }

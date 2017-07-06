@@ -30,4 +30,18 @@ function showJourneyList(ListViewData){
     console.log(elementList);
     return elementList;
 }
-exports.showJourneyList = showJourneyList;
+
+function getSearchURL(searchData) {
+    // let searchURL = "https://m.buytickets.virgintrains.co.uk/dataPassedIn?Origin="+
+    //                 182+"&Destination="+
+    //                 115+"&OutboundDate="+
+    //                 2017-07-08+"&OutboundTime="+
+    //                 10-00+"&NumberOfAdults="+
+    //                 2;
+    console.log("This is What you got: " + searchData);
+    return "https://m.buytickets.virgintrains.co.uk/dataPassedIn?Origin=182&Destination=115&OutboundDate=2017-07-08&OutboundTime=10-00&NumberOfAdults=2";
+}
+module.exports={
+    showJourneyList : showJourneyList,
+    getSearchURL : getSearchURL
+};
