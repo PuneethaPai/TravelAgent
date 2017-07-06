@@ -12,7 +12,7 @@ function showJourneyList(ListViewData){
         "subtitle":ListViewData.source+" >>> "+ListViewData.destination+"\n"+ListViewData.seats+" Passengers\n" ,
     };
     elementList.push(banner);
-    for (let i = 0; i < list_len-1; i++){
+    for (let i = 0; i < 3; i++){
         let url = serverURL + "summary?q=";
         format={
             "title":journeys[i].duration.toString(),

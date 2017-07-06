@@ -71,7 +71,7 @@ function apiWebHookHandler(req, res) {
                 let save_schedule = [];
                 let summaryList = [];
                 let listViewList = [];
-                for (let i = 1; i < list_len; i++) {
+                for (let i = 0; i < list_len; i++) {
                     let tripSummary = {};
                     let listViewData = {};
                     let count = i + 1;
