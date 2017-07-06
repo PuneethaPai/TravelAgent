@@ -31,15 +31,15 @@ function showJourneyList(ListViewData){
     return elementList;
 }
 
-function getSearchURL(searchData) {
-    // let searchURL = "https://m.buytickets.virgintrains.co.uk/dataPassedIn?Origin="+
-    //                 182+"&Destination="+
-    //                 115+"&OutboundDate="+
-    //                 2017-07-08+"&OutboundTime="+
-    //                 10-00+"&NumberOfAdults="+
-    //                 2;
-    console.log("This is What you got: " + searchData);
-    return "https://m.buytickets.virgintrains.co.uk/dataPassedIn?Origin=182&Destination=115&OutboundDate=2017-07-08&OutboundTime=10-00&NumberOfAdults=2";
+function getSearchURL(searchParameters) {
+    let searchURL = "https://m.buytickets.virgintrains.co.uk/dataPassedIn?Origin="+
+                    searchParameters.origin+"&Destination="+
+                    searchParameters.destination+"&OutboundDate="+
+                    searchParameters.outboundDate+"&OutboundTime="+
+                    "10-00"+"&NumberOfAdults="+
+                    searchParameters.numberOfAdults;
+    console.log(searchURL);
+    return searchURL;
 }
 module.exports={
     showJourneyList : showJourneyList,

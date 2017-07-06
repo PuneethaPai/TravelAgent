@@ -10,6 +10,7 @@ let
     serverURL = process.env.serverURL || config.serverURL,
     listViewDetails = apiWebHook.listViewDetails,
     preffered_train=apiWebHook.preferedTrain,
+    searchParameters=apiWebHook.searchParameters,
     showJourneyList = journeyList.showJourneyList,
     getSearchURL = journeyList.getSearchURL;
 
@@ -39,7 +40,7 @@ function sendMessage(event) {
                                        {
                                            "title": "View More",
                                            "type": "web_url",
-                                           "url": getSearchURL(listViewDetails)
+                                           "url": getSearchURL(searchParameters)
                                        }
                                    ]
                                }

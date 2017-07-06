@@ -6,7 +6,7 @@ let recent_schedule = [],
     global_seats = 1,
     fastrackSummaryDetails = {},
     listViewDetails = {},
-    preferedTrain={},
+    preferedTrain = {},
     searchParameters = {};
 
 function apiWebHookHandler(req, res) {
@@ -21,9 +21,9 @@ function apiWebHookHandler(req, res) {
         let source_code = stations[source.toUpperCase()];
         let destination_code = stations[destination.toUpperCase()];
 
-        listViewDetails.source=source;
-        listViewDetails.destination=destination;
-        listViewDetails.seats=seat;
+        listViewDetails.source = source;
+        listViewDetails.destination = destination;
+        listViewDetails.seats = seat;
 
         console.log(destination_code);
 
@@ -44,25 +44,17 @@ function apiWebHookHandler(req, res) {
             });
         }
 
-        searchParameters = {
-            'origin': source_code,
-            'destination': destination_code,
-            'outboundDate': date,
-            'outboundTime': outboundTime,
-            'numberOfAdults': seat
-        }
+        searchParameters.origin = source_code;
+        searchParameters.destination = destination_code;
+        searchParameters.outboundDate = date;
+        searchParameters.outboundTime = outboundTime;
+        searchParameters.numberOfAdults = seat;
 
         let options = {
             url: 'https://et2-fasttrackapi.ttlnonprod.com/v1/Search',
             method: 'GET',
             qs: {
-                'journeyRequest': {
-                    'origin': source_code,
-                    'destination': destination_code,
-                    'outboundDate': date,
-                    'outboundTime': "",
-                    'numberOfAdults': seat
-                }
+                'journeyRequest': searchParameters
             },
             headers: {
                 "Accept": "application/json",
@@ -89,7 +81,7 @@ function apiWebHookHandler(req, res) {
                     tripSummary.destination_crs = destination_code;
                     tripSummary.arrival_date_time = journeys[i].ArrivalDateTime;
                     tripSummary.departure_date_time = journeys[i].DepartureDateTime;
-                    tripSummary.seats=journeys[i].Tickets[0].Adults.Number;
+                    tripSummary.seats = journeys[i].Tickets[0].Adults.Number;
                     tripSummary.total_fare = journeys[i].Tickets[0].Total;
                     tripSummary.ticket_type = journeys[i].Tickets[0].TicketType;
                     tripSummary.route_code = journeys[i].Tickets[0].RouteCode;
@@ -129,7 +121,7 @@ function apiWebHookHandler(req, res) {
         preferedTrain.end = listViewDetails.journeyList[index].end;
         preferedTrain.duration = listViewDetails.journeyList[index].duration;
         preferedTrain.fare = parseInt(listViewDetails.journeyList[index].fare, 10) * global_seats;
-        preferedTrain.index=index;
+        preferedTrain.index = index;
         console.log(preferedTrain);
         return res.json({
             speech: "Confirm",
@@ -189,6 +181,6 @@ module.exports = {
     fastrackSummaryDetails: fastrackSummaryDetails,
     listViewDetails: listViewDetails,
     apiWebHookHandler: apiWebHookHandler,
-    preferedTrain:preferedTrain,
-    searchParameters:searchParameters
+    preferedTrain: preferedTrain,
+    searchParameters: searchParameters
 };
