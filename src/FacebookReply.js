@@ -89,6 +89,25 @@ function sendMessage(event) {
   apiai.end();
 }
 
+function senderAction(event) {
+    let sender = event.sender.id;
+    request({
+        url: 'https://graph.facebook.com/v2.6/me/messages',
+        qs: {access_token: 'EAAPfT94PkckBAPqY1ZAFgtMecs7hRQnF4bgh7yu1xeBft4pKx7wVgwldZCangBx6PYPInwwTkL6ZBaL64gLCT7PBrwyqBllS2eYnv2eJBGRgMZAKnh1X8volYUaaCDPZCnLVLAcalF9EV96VLVlG8iGQuqZAQey8dqk0zDLyROMgZDZD'},
+        method: 'POST',
+        json: {
+            recipient: {id: sender},
+            "sender_action":"typing_on"
+        }
+    }, (error, response) => {
+        if (error) {
+            console.log('Error sending message: ', error);
+        } else if (response.body.error) {
+            console.log('Error: ', response.body.error);
+        }
+    });
+}
 module.exports = {
-    sendMessage : sendMessage
+    sendMessage : sendMessage,
+    senderAction:senderAction
 }
