@@ -36,15 +36,15 @@ function apiWebHookHandler(req, res) {
         if (typeof destination_code === 'undefined') {
             console.log("destination_code");
             return res.json({
-                speech: "The Source is Incorrect",
+                speech: "The Destination is Incorrect",
                 displayText: "The Destination is Incorrect",
                 source: 'fetch_schedule'
             });
         }
         if (!source_code) {
             return res.json({
-                speech: "The Destination is Incorrect",
-                displayText: "The Destination is Incorrect",
+                speech: "The Source is Incorrect",
+                displayText: "The Source is Incorrect",
                 source: 'fetch_schedule'
             });
         }
