@@ -4,13 +4,14 @@ var replaceall = require("replaceall");
 function getPostData(data){
     var
         req_id = "abcd",
-        origin_crs = data['origin_crs'],
-        destination_crs = data['destination_crs'],
-        departure_date_time = data['departure_date_time'],
-        arrival_date_time = data['arrival_date_time'],
-        total_fare = data['total_fare'].toString(),
-        ticket_type = data['ticket_type'],
-        route_code = data['route_code'];
+        origin_crs = data.origin_crs,
+        destination_crs = data.destination_crs,
+        departure_date_time = data.departure_date_time,
+        arrival_date_time = data.arrival_date_time,
+        total_fare = data.total_fare.toString(),
+        ticket_type = data.ticket_type,
+        route_code = data.route_code,
+        seats=data.seats;
 
     arrival_date_time=replaceall('+','.000%2B',arrival_date_time);
     arrival_date_time=replaceall(':','%3A',arrival_date_time);
@@ -26,7 +27,8 @@ function getPostData(data){
             departure_date_time + "%3C%2FdepartureDateTime%3E%3CarrivalDateTime%3E" +
             arrival_date_time + "%3C%2FarrivalDateTime%3E%3C%2FoutboundJourney%3E%3CoutboundFares%3E%3CTicketTypeDescription%3E%3C%2FTicketTypeDescription%3E%3CtotalFare%3E" +
             total_fare + "%3C%2FtotalFare%3E%3CticketType%3E" +
-            ticket_type + "%3C%2FticketType%3E%3CadultFullFare%3E%3C%2FadultFullFare%3E%3CchildFullFare%3E0%3C%2FchildFullFare%3E%3CadultDiscountFare%3E0%3C%2FadultDiscountFare%3E%3CchildDiscountFare%3E0%3C%2FchildDiscountFare%3E%3CnumberOfFullFareAdults%3E1%3C%2FnumberOfFullFareAdults%3E%3CnumberOfFullFareChildren%3E0%3C%2FnumberOfFullFareChildren%3E%3CnumberOfDiscountFareAdults%3E0%3C%2FnumberOfDiscountFareAdults%3E%3CnumberOfDiscountFareChildren%3E0%3C%2FnumberOfDiscountFareChildren%3E%3CnumberOfRailcards%3E0%3C%2FnumberOfRailcards%3E%3CrouteCode%3E" +
+            ticket_type + "%3C%2FticketType%3E%3CadultFullFare%3E%3C%2FadultFullFare%3E%3CchildFullFare%3E0%3C%2FchildFullFare%3E%3CadultDiscountFare%3E0%3C%2FadultDiscountFare%3E%3CchildDiscountFare%3E0%3C%2FchildDiscountFare%3E%3CnumberOfFullFareAdults%3E"+
+            seats+"%3C%2FnumberOfFullFareAdults%3E%3CnumberOfFullFareChildren%3E0%3C%2FnumberOfFullFareChildren%3E%3CnumberOfDiscountFareAdults%3E0%3C%2FnumberOfDiscountFareAdults%3E%3CnumberOfDiscountFareChildren%3E0%3C%2FnumberOfDiscountFareChildren%3E%3CnumberOfRailcards%3E0%3C%2FnumberOfRailcards%3E%3CrouteCode%3E"+
             route_code + "%3C%2FrouteCode%3E%3CfareOriginNlc%3E%3C%2FfareOriginNlc%3E%3CfareDestinationNlc%3E%3C%2FfareDestinationNlc%3E%3C%2FoutboundFares%3E%3C%2FpurchaseTicketRequest%3E";
     // console.log(result);
     return result;

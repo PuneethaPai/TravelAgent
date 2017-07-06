@@ -92,6 +92,7 @@ function apiWebHookHandler(req, res) {
                     tripSummary.destination_crs = destination_code;
                     tripSummary.arrival_date_time = journeys[i].ArrivalDateTime;
                     tripSummary.departure_date_time = journeys[i].DepartureDateTime;
+                    tripSummary.seats=journeys[i].Tickets[0].Adults.Number;
                     // for (let i = 0; i < journeys[i].Tickets.length; i++){
                     //
                     // }
