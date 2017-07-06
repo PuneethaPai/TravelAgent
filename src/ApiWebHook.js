@@ -17,7 +17,7 @@ function apiWebHookHandler(req, res) {
     let destination = req.body.result.parameters['destination'];
     let date = req.body.result.parameters['journey-date'];
     let seat = parseInt(req.body.result.parameters['seats'], 10);
-
+    console.log("hello");
     if (req.body.result.action === 'fetch_schedule' && source !== "" && destination !== "" && date !== "") {
         console.log(source);
 
@@ -26,8 +26,9 @@ function apiWebHookHandler(req, res) {
 
         // fastrackSummaryDetails.origin_crs = source_code;
         // fastrackSummaryDetails.destination_crs = destination_code;
-        // listViewDetails.source=source;
-        // listViewDetails.destination=destination;
+        listViewDetails.source=source;
+        listViewDetails.destination=destination;
+        listViewDetails.seats=seat;
 
         console.log(destination_code);
 
@@ -42,8 +43,8 @@ function apiWebHookHandler(req, res) {
         }
         if (!source_code) {
             return res.json({
-                speech: "The Source is Incorrect",
-                displayText: "The Source is Incorrect",
+                speech: "The Destination is Incorrect",
+                displayText: "The Destination is Incorrect",
                 source: 'fetch_schedule'
             });
         }
@@ -93,9 +94,6 @@ function apiWebHookHandler(req, res) {
                     tripSummary.arrival_date_time = journeys[i].ArrivalDateTime;
                     tripSummary.departure_date_time = journeys[i].DepartureDateTime;
                     tripSummary.seats=journeys[i].Tickets[0].Adults.Number;
-                    // for (let i = 0; i < journeys[i].Tickets.length; i++){
-                    //
-                    // }
                     tripSummary.total_fare = journeys[i].Tickets[0].Total;
                     tripSummary.ticket_type = journeys[i].Tickets[0].TicketType;
                     tripSummary.route_code = journeys[i].Tickets[0].RouteCode;

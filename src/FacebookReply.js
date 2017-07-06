@@ -30,8 +30,7 @@ function sendMessage(event) {
                                "type": "template",
                                "payload": {
                                    "template_type": "list",
-                                   "top_element_style": "compact",
-                                   "elements": journeyList.showJourneyList(listViewDetails.journeyList)
+                                   "elements": journeyList.showJourneyList(listViewDetails)
                                }
                            }
                            }
@@ -46,7 +45,7 @@ function sendMessage(event) {
                                    {
                                      "title":preffered_train.duration,
                                      "subtitle":"Start:"+preffered_train.start+"\n"+"End:"+preffered_train.end+"\n"+"Fare:"+preffered_train.fare+"\n",
-                                     "image_url":"https://www.thetrainline.com/m/public/00f6856c8fb412b329525bc1bcc2f98a.jpg",
+                                     "image_url":"https://invitationdigital-res-2.cloudinary.com/image/upload/f_auto,fl_strip_profile,w_628,c_crop/w_628,h_384,c_fill/trainline_up_to_43_off_tickets_with_advance_bookings_at_trainline_premium_offer_image.jpg",
                                      "buttons":[
                                        {
                                          "type":"web_url",

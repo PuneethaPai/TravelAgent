@@ -3,13 +3,20 @@ const config = require('config');
 serverURL = process.env.serverURL || config.serverURL;
 
 function showJourneyList(ListViewData){
-    list_len=ListViewData.length;
+    let list_len=ListViewData.journeyList.length;
+    let journeys=ListViewData.journeyList;
     elementList=[];
-    for (let i = 0; i < list_len; i++){
+    let banner= {
+        "title": "Outbound",
+        "image_url": "https://invitationdigital-res-2.cloudinary.com/image/upload/f_auto,fl_strip_profile,w_628,c_crop/w_628,h_384,c_fill/trainline_up_to_43_off_tickets_with_advance_bookings_at_trainline_premium_offer_image.jpg",
+        "subtitle":ListViewData.source+" >>> "+ListViewData.destination+"\n"+ListViewData.seats+" Passengers\n" ,
+    };
+    elementList.push(banner);
+    for (let i = 0; i < list_len-1; i++){
         let url = serverURL + "summary?q=";
         format={
-            "title":ListViewData[i].duration.toString(),
-            "subtitle": "Start:"+ListViewData[i].start+"\n"+"End:"+ListViewData[i].end+"\n"+"Fare:"+ListViewData[i].fare+"\n",
+            "title":journeys[i].duration.toString(),
+            "subtitle": "Start:"+journeys[i].start+"\n"+"End:"+journeys[i].end+"\n"+"Fare:"+journeys[i].fare+"\n",
             "buttons": [
                 {
                     "title": "Book",
