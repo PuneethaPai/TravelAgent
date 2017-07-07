@@ -15,10 +15,8 @@ function apiWebHookHandler(req, res) {
     let source = req.body.result.parameters['source'],
         destination = req.body.result.parameters['destination'],
         date = req.body.result.parameters['journey-date'],
-        seat = parseInt(req.body.result.parameters['seats'], 10),
-        outboundTime = "";
+        seat = parseInt(req.body.result.parameters['seats'], 10);
 
-    console.log("hello");
     if (req.body.result.action === 'fetch_schedule' && source !== "" && destination !== "" && date !== "") {
         let source_code = stations[source.toUpperCase()];
         let destination_code = stations[destination.toUpperCase()];
@@ -38,10 +36,19 @@ function apiWebHookHandler(req, res) {
                 source: 'fetch_schedule'
             });
         }
+
         if (!source_code) {
             return res.json({
                 speech: "The Source is Incorrect",
                 displayText: "The Source is Incorrect",
+                source: 'fetch_schedule'
+            });
+        }
+
+        if(destination_code ===source_code){
+            return res.json({
+                speech: "Great I guess You Are Already There\nHave a great time",
+                displayText: "... Great I guess You Are Already There\nHave a great time",
                 source: 'fetch_schedule'
             });
         }
@@ -53,7 +60,7 @@ function apiWebHookHandler(req, res) {
         searchParameters.outboundDate = date;
         searchParameters.outboundTime = journeyTime;
         searchParameters.numberOfAdults = seat;
-
+        console.log(searchParameters);
         let options = {
             url: 'https://et2-fasttrackapi.ttlnonprod.com/v1/Search',
             method: 'GET',
@@ -89,7 +96,6 @@ function apiWebHookHandler(req, res) {
                     tripSummary.total_fare = journeys[i].Tickets[0].Total;
                     tripSummary.ticket_type = journeys[i].Tickets[0].TicketType;
                     tripSummary.route_code = journeys[i].Tickets[0].RouteCode;
-
                     listViewData.start = train_data[0].OriginDepartureTime.toString();
                     listViewData.end = train_data[0].DestinationArrivalTime.toString();
                     listViewData.duration = train_data[0].Duration.toString();

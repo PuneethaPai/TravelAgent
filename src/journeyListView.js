@@ -32,7 +32,7 @@ function showJourneyList(ListViewData){
 }
 
 function getSearchURL(searchParameters) {
-    let searchURL = "https://m.buytickets.virgintrains.co.uk/dataPassedIn?Origin="+
+    let searchURL = "https://et2-m-virgintrains.ttlnonprod.com/dataPassedIn?Origin="+
                     searchParameters.origin+"&Destination="+
                     searchParameters.destination+"&OutboundDate="+
                     searchParameters.outboundDate+"&OutboundTime="+
