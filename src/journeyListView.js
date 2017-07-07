@@ -36,7 +36,7 @@ function getSearchURL(searchParameters) {
                     searchParameters.origin+"&Destination="+
                     searchParameters.destination+"&OutboundDate="+
                     searchParameters.outboundDate+"&OutboundTime="+
-                    "10-00"+"&NumberOfAdults="+
+                    searchParameters.outboundTime+"&NumberOfAdults="+
                     searchParameters.numberOfAdults;
     console.log(searchURL);
     return searchURL;

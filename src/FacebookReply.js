@@ -122,4 +122,4 @@ function senderAction(event) {
 module.exports = {
     sendMessage : sendMessage,
     senderAction:senderAction
-}
+};

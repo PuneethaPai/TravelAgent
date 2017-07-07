@@ -1,5 +1,6 @@
 const
     request = require('request'),
+    moment=require('moment-timezone'),
     stations = require("../assets/stations.json");
 
 let recent_schedule = [],
@@ -10,6 +11,7 @@ let recent_schedule = [],
     searchParameters = {};
 
 function apiWebHookHandler(req, res) {
+    console.log();
     let source = req.body.result.parameters['source'],
         destination = req.body.result.parameters['destination'],
         date = req.body.result.parameters['journey-date'],
@@ -44,10 +46,12 @@ function apiWebHookHandler(req, res) {
             });
         }
 
+        let now=moment(req.body.timestamp.toString());
+        let journeyTime=now.clone().tz("Europe/London").format("hh-mm");
         searchParameters.origin = source_code;
         searchParameters.destination = destination_code;
         searchParameters.outboundDate = date;
-        searchParameters.outboundTime = outboundTime;
+        searchParameters.outboundTime = journeyTime;
         searchParameters.numberOfAdults = seat;
 
         let options = {
