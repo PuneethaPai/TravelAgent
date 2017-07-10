@@ -2,21 +2,38 @@ const
     request = require('request'),
     moment = require('moment-timezone'),
     stations = require("../assets/stations.json"),
-    extractUserPreferenceTrain = require('./UserPrefernce.js').extractUserPreferedTrain
+    extractUserPreferenceTrain = require('./UserPrefernce.js').extractUserPreferedTrain,
+    dayTimeMap = {
+        "morning":'06-00',
+        "afternoon":'12-00',
+        "evening":'16-00',
+        "night":'20-00'
+    };
 
-let global_seats = 1,
+let
+    global_seats = 1,
     fastrackSummaryDetails = {},
     listViewDetails = {},
     preferedTrain = {},
     searchParameters = {};
 
 function apiWebHookHandler(req, res) {
-    let source = req.body.result.parameters['source'],
-        destination = req.body.result.parameters['destination'],
-        date = req.body.result.parameters['journey-date'],
-        seat = parseInt(req.body.result.parameters['seats'], 10);
-
-    if (req.body.result.action === 'fetch_schedule' && source !== "" && destination !== "" && date !== "") {
+    let
+        parameters = req.body.result.parameters,
+        journeyTime = dayTimeMap[parameters['time']],
+        source = parameters['source'],
+        destination = parameters['destination'],
+        date = parameters['journey-date'],
+        seat = parseInt(parameters['seats'], 10);
+    console.log(parameters);
+    if (req.body.result.action === 'fetch_schedule' && source !== "" && destination !== "" && date !== "" && journeyTime === undefined) {
+        return res.json({
+            speech: "Ask Time",
+            displayText: "Ask Time",
+            source: 'fetch_schedule'
+        });
+    }
+    if (req.body.result.action === 'fetch_schedule' && source !== "" && destination !== "" && date !== "" && journeyTime !== "") {
         let source_code = stations[source.toUpperCase()];
         let destination_code = stations[destination.toUpperCase()];
 
@@ -49,8 +66,6 @@ function apiWebHookHandler(req, res) {
             });
         }
 
-        let now = moment(req.body.timestamp.toString());
-        let journeyTime = now.clone().tz("Europe/London").format("hh-mm");
         searchParameters.origin = source_code;
         searchParameters.destination = destination_code;
         searchParameters.outboundDate = date;
@@ -88,10 +103,12 @@ function apiWebHookHandler(req, res) {
                     tripSummary.total_fare = journeys[i].Tickets[0].Total;
                     tripSummary.ticket_type = journeys[i].Tickets[0].TicketType;
                     tripSummary.route_code = journeys[i].Tickets[0].RouteCode;
+
                     listViewData.start = train_data[0].OriginDepartureTime.toString();
                     listViewData.end = train_data[0].DestinationArrivalTime.toString();
                     listViewData.duration = train_data[0].Duration.toString();
                     listViewData.fare = journeys[i].Tickets[0].Fare.toString();
+
                     summaryList.push(tripSummary);
                     listViewList.push(listViewData);
                 }
@@ -116,7 +133,7 @@ function apiWebHookHandler(req, res) {
         })
     }
 
-    let preference = req.body.result.parameters['Preferences'];
+    let preference = parameters['Preferences'];
 
     function PreferenceDetailExtract(index) {
         preferedTrain.start = listViewDetails.journeyList[index].start;
@@ -136,6 +153,7 @@ function apiWebHookHandler(req, res) {
         return extractUserPreferenceTrain(listViewDetails, preference)
     }
 }
+
 module.exports = {
     fastrackSummaryDetails: fastrackSummaryDetails,
     listViewDetails: listViewDetails,

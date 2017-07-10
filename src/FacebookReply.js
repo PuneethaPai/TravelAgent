@@ -3,8 +3,34 @@ const
     apiaiApp = require('apiai')(ClientAccessToken),
     journeyList=require('./journeyListView.js'),
     request = require('request'),
-    apiWebHook = require('./ApiWebHook.js');
-    config = require('config');
+    apiWebHook = require('./ApiWebHook.js'),
+    config = require('config'),
+    timePreference = {
+        "text":"Select Journey Time",
+        "quick_replies":[
+            {
+                "content_type":"text",
+                "title":"Morning",
+                "payload":"Morning",
+            },
+            {
+                "content_type":"text",
+                "title":"Afternoon",
+                "payload":"Afternoon",
+            },
+            {
+                "content_type":"text",
+                "title":"Evening",
+                "payload":"Evening",
+            },
+            {
+                "content_type":"text",
+                "title":"Night",
+                "payload":"Night",
+            }
+        ]
+    };
+
 
 let
     serverURL = process.env.serverURL || config.serverURL,
@@ -16,6 +42,9 @@ let
 
 function getFacebookFormattedReply(response) {
     let aiText = response.result.fulfillment.speech;
+    if(aiText === 'Ask Time'){
+        return timePreference;
+    }
     if (aiText === "Schedule") {
         return {
             attachment: {
@@ -73,32 +102,30 @@ function sendMessage(event) {
     });
 
     apiai.on('response', (response) => {
-      let customResponse = getFacebookFormattedReply(response);
-
-      request({
-          url: 'https://graph.facebook.com/v2.6/me/messages',
-          qs: {access_token: 'EAAPfT94PkckBAPqY1ZAFgtMecs7hRQnF4bgh7yu1xeBft4pKx7wVgwldZCangBx6PYPInwwTkL6ZBaL64gLCT7PBrwyqBllS2eYnv2eJBGRgMZAKnh1X8volYUaaCDPZCnLVLAcalF9EV96VLVlG8iGQuqZAQey8dqk0zDLyROMgZDZD'},
-          method: 'POST',
-          json: {
-              whitelisted_domains:["https://peterssendreceiveapp.ngrok.io"],
-              recipient: {id: sender},
-              message: customResponse
-          }
-      }, (error, response) => {
+        let customResponse = getFacebookFormattedReply(response);
+        let options = {
+            url: 'https://graph.facebook.com/v2.6/me/messages',
+            qs: {access_token: 'EAAPfT94PkckBAPqY1ZAFgtMecs7hRQnF4bgh7yu1xeBft4pKx7wVgwldZCangBx6PYPInwwTkL6ZBaL64gLCT7PBrwyqBllS2eYnv2eJBGRgMZAKnh1X8volYUaaCDPZCnLVLAcalF9EV96VLVlG8iGQuqZAQey8dqk0zDLyROMgZDZD'},
+            method: 'POST',
+            json: {
+                recipient: {id: sender},
+                message: customResponse
+            }
+        };
+        request(options, (error, response) => {
           if (error) {
               console.log('Error sending message: ', error);
           } else if (response.body.error) {
               console.log('Error: ', response.body.error);
           }
-      });
+        });
+    });
 
- });
-
-  apiai.on('error', (error) => {
+    apiai.on('error', (error) => {
     console.log(error);
-  });
+    });
 
-  apiai.end();
+    apiai.end();
 }
 
 function senderAction(event) {
@@ -119,7 +146,8 @@ function senderAction(event) {
         }
     });
 }
+
 module.exports = {
     sendMessage : sendMessage,
-    senderAction:senderAction
+    senderAction:senderAction,
 };
