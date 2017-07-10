@@ -27,7 +27,6 @@ function showJourneyList(ListViewData){
         };
         elementList.push(format);
     }
-    console.log(elementList);
     return elementList;
 }
 
@@ -38,7 +37,7 @@ function getSearchURL(searchParameters) {
                     searchParameters.outboundDate+"&OutboundTime="+
                     searchParameters.outboundTime+"&NumberOfAdults="+
                     searchParameters.numberOfAdults;
-    console.log(searchURL);
+    console.log("Schedule sent with URL:-" + searchURL);
     return searchURL;
 }
 module.exports={

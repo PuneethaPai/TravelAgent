@@ -17,8 +17,6 @@ function getPostData(data){
     arrival_date_time=replaceall(':','%3A',arrival_date_time);
     departure_date_time=replaceall('+','.000%2B',departure_date_time);
     departure_date_time=replaceall(':','%3A',departure_date_time);
-    // total_fare=total_fare+'00';
-    // console.log(arrival_date_time);
     var result =
             "%3C%3Fxml+version%3D%221.0%22+encoding%3D%22UTF-8%22+standalone%3D%22yes%22%3F%3E%3CpurchaseTicketRequest+xmlns%3D%22http%3A%2F%2Fojp.nationalrail.co.uk%2Fschemas%2FFulfilmentHandoff%22%3E%3CrequestId%3E" +
             req_id + "%3C%2FrequestId%3E%3CoriginCrs%3E" +
@@ -30,7 +28,6 @@ function getPostData(data){
             ticket_type + "%3C%2FticketType%3E%3CadultFullFare%3E%3C%2FadultFullFare%3E%3CchildFullFare%3E0%3C%2FchildFullFare%3E%3CadultDiscountFare%3E0%3C%2FadultDiscountFare%3E%3CchildDiscountFare%3E0%3C%2FchildDiscountFare%3E%3CnumberOfFullFareAdults%3E"+
             seats+"%3C%2FnumberOfFullFareAdults%3E%3CnumberOfFullFareChildren%3E0%3C%2FnumberOfFullFareChildren%3E%3CnumberOfDiscountFareAdults%3E0%3C%2FnumberOfDiscountFareAdults%3E%3CnumberOfDiscountFareChildren%3E0%3C%2FnumberOfDiscountFareChildren%3E%3CnumberOfRailcards%3E0%3C%2FnumberOfRailcards%3E%3CrouteCode%3E"+
             route_code + "%3C%2FrouteCode%3E%3CfareOriginNlc%3E%3C%2FfareOriginNlc%3E%3CfareDestinationNlc%3E%3C%2FfareDestinationNlc%3E%3C%2FoutboundFares%3E%3C%2FpurchaseTicketRequest%3E";
-    // console.log(result);
     return result;
 }
 

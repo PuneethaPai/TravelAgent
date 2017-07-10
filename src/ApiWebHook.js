@@ -1,17 +1,15 @@
 const
     request = require('request'),
-    moment=require('moment-timezone'),
+    moment = require('moment-timezone'),
     stations = require("../assets/stations.json");
 
-let recent_schedule = [],
-    global_seats = 1,
+let global_seats = 1,
     fastrackSummaryDetails = {},
     listViewDetails = {},
     preferedTrain = {},
     searchParameters = {};
 
 function apiWebHookHandler(req, res) {
-    console.log();
     let source = req.body.result.parameters['source'],
         destination = req.body.result.parameters['destination'],
         date = req.body.result.parameters['journey-date'],
@@ -25,11 +23,8 @@ function apiWebHookHandler(req, res) {
         listViewDetails.destination = destination;
         listViewDetails.seats = seat;
 
-        console.log(destination_code);
-
         // Check For Incorrect Source Or Destination
         if (typeof destination_code === 'undefined') {
-            console.log("destination_code");
             return res.json({
                 speech: "The Destination is Incorrect",
                 displayText: "The Destination is Incorrect",
@@ -45,7 +40,7 @@ function apiWebHookHandler(req, res) {
             });
         }
 
-        if(destination_code ===source_code){
+        if (destination_code === source_code) {
             return res.json({
                 speech: "Great I guess You Are Already There\nHave a great time",
                 displayText: "... Great I guess You Are Already There\nHave a great time",
@@ -53,14 +48,14 @@ function apiWebHookHandler(req, res) {
             });
         }
 
-        let now=moment(req.body.timestamp.toString());
-        let journeyTime=now.clone().tz("Europe/London").format("hh-mm");
+        let now = moment(req.body.timestamp.toString());
+        let journeyTime = now.clone().tz("Europe/London").format("hh-mm");
         searchParameters.origin = source_code;
         searchParameters.destination = destination_code;
         searchParameters.outboundDate = date;
         searchParameters.outboundTime = journeyTime;
         searchParameters.numberOfAdults = seat;
-        console.log(searchParameters);
+        console.log("Search Parameters:- " + searchParameters);
         let options = {
             url: 'https://et2-fasttrackapi.ttlnonprod.com/v1/Search',
             method: 'GET',
@@ -73,21 +68,16 @@ function apiWebHookHandler(req, res) {
             }
         };
         request(options, (err, response) => {
-            console.log(response.statusCode);
             if (!err && response.statusCode === 200) {
                 let json = JSON.parse(response.body);
                 let journeys = json.OutboundJournies;
                 let list_len = journeys.length;
-                let schedule = "Please select the train you would like to book" + "\n\n";
-                let save_schedule = [];
                 let summaryList = [];
                 let listViewList = [];
                 for (let i = 0; i < list_len; i++) {
                     let tripSummary = {};
                     let listViewData = {};
-                    let count = i + 1;
                     let train_data = journeys[i].Legs;
-                    let fare = journeys[i].Tickets[0].Total;
                     tripSummary.origin_crs = source_code;
                     tripSummary.destination_crs = destination_code;
                     tripSummary.arrival_date_time = journeys[i].ArrivalDateTime;
@@ -106,8 +96,7 @@ function apiWebHookHandler(req, res) {
                 listViewDetails.journeyList = listViewList;
                 fastrackSummaryDetails.summaryList = summaryList;
 
-                console.log(fastrackSummaryDetails);
-                console.log(listViewDetails);
+                console.log("Obtained Schedule:- " + listViewDetails);
                 return res.json({
                     speech: "Schedule",
                     displayText: "Schedule",
@@ -132,7 +121,7 @@ function apiWebHookHandler(req, res) {
         preferedTrain.duration = listViewDetails.journeyList[index].duration;
         preferedTrain.fare = parseInt(listViewDetails.journeyList[index].fare, 10) * global_seats;
         preferedTrain.index = index;
-        console.log(preferedTrain);
+        console.log("User Prefered train:- " + preferedTrain);
         return res.json({
             speech: "Confirm",
             displayText: "Confirm",
@@ -143,14 +132,10 @@ function apiWebHookHandler(req, res) {
     if (req.body.result.action === 'apply_preferences' && preference !== "" && listViewDetails.journeyList.length > 0) {
         let itin_length = listViewDetails.journeyList.length;
 
-        console.log(itin_length);
-
         if (preference === "earliest") {
-            console.log("Ima here in Earliest");
             let index = 0;
             return PreferenceDetailExtract(index);
         } else if (preference === "cheapest") {
-            console.log("I'am here in Cheapest");
             let min_cost = 1000;
             let cheapest = 0;
             for (i = 0; i < itin_length; i++) {
@@ -161,21 +146,17 @@ function apiWebHookHandler(req, res) {
                     cheapest = i
                 }
             }
-            console.log(cheapest);
             return PreferenceDetailExtract(cheapest);
         } else if (preference === "fastest") {
-            console.log("I am here in Fastest");
             let min_dur = 1000;
             let fastest = 0;
             for (i = 0; i < itin_length; i++) {
                 let train = listViewDetails.journeyList[i];
 
-                let hr = listViewDetails.journeyList[i].duration.split(' ')[0].match(/\d/g);
+                let hr = train.duration.split(' ')[0].match(/\d/g);
                 hr = hr.join("");
-                let min = listViewDetails.journeyList[i].duration.split(' ')[1].match(/\d/g);
+                let min = train.duration.split(' ')[1].match(/\d/g);
                 min = min.join("");
-                console.log(hr);
-                console.log(min);
 
                 const dur = parseInt(hr, 10) * 60 + parseInt(min, 10);
                 if (min_dur > dur) {
