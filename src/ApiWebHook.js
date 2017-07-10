@@ -1,7 +1,8 @@
 const
     request = require('request'),
     moment = require('moment-timezone'),
-    stations = require("../assets/stations.json");
+    stations = require("../assets/stations.json"),
+    extractUserPreferenceTrain = require('./UserPrefernce.js').extractUserPreferedTrain
 
 let global_seats = 1,
     fastrackSummaryDetails = {},
@@ -55,7 +56,8 @@ function apiWebHookHandler(req, res) {
         searchParameters.outboundDate = date;
         searchParameters.outboundTime = journeyTime;
         searchParameters.numberOfAdults = seat;
-        console.log("Search Parameters:- " + searchParameters);
+        console.log("Search Parameters:-");
+        console.log(searchParameters);
         let options = {
             url: 'https://et2-fasttrackapi.ttlnonprod.com/v1/Search',
             method: 'GET',
@@ -96,7 +98,8 @@ function apiWebHookHandler(req, res) {
                 listViewDetails.journeyList = listViewList;
                 fastrackSummaryDetails.summaryList = summaryList;
 
-                console.log("Obtained Schedule:- " + listViewDetails);
+                console.log("Obtained Schedule:-");
+                console.log(listViewDetails);
                 return res.json({
                     speech: "Schedule",
                     displayText: "Schedule",
@@ -130,42 +133,7 @@ function apiWebHookHandler(req, res) {
     }
 
     if (req.body.result.action === 'apply_preferences' && preference !== "" && listViewDetails.journeyList.length > 0) {
-        let itin_length = listViewDetails.journeyList.length;
-
-        if (preference === "earliest") {
-            let index = 0;
-            return PreferenceDetailExtract(index);
-        } else if (preference === "cheapest") {
-            let min_cost = 1000;
-            let cheapest = 0;
-            for (i = 0; i < itin_length; i++) {
-                let train = listViewDetails.journeyList[i];
-                let cost = parseInt(train.fare, 10);
-                if (min_cost > cost) {
-                    min_cost = cost;
-                    cheapest = i
-                }
-            }
-            return PreferenceDetailExtract(cheapest);
-        } else if (preference === "fastest") {
-            let min_dur = 1000;
-            let fastest = 0;
-            for (i = 0; i < itin_length; i++) {
-                let train = listViewDetails.journeyList[i];
-
-                let hr = train.duration.split(' ')[0].match(/\d/g);
-                hr = hr.join("");
-                let min = train.duration.split(' ')[1].match(/\d/g);
-                min = min.join("");
-
-                const dur = parseInt(hr, 10) * 60 + parseInt(min, 10);
-                if (min_dur > dur) {
-                    min_dur = dur;
-                    fastest = i
-                }
-            }
-            return PreferenceDetailExtract(fastest);
-        }
+        return extractUserPreferenceTrain(listViewDetails, preference)
     }
 }
 module.exports = {
