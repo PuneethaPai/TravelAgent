@@ -1,4 +1,19 @@
+let preferedTrain = {};
 function extractUserPreferedTrain(summary, preference) {
+    function PreferenceDetailExtract(index) {
+        preferedTrain.start = summary.journeyList[index].start;
+        preferedTrain.end = summary.journeyList[index].end;
+        preferedTrain.duration = summary.journeyList[index].duration;
+        preferedTrain.fare = parseInt(summary.journeyList[index].fare, 10) * summary.seats;
+        preferedTrain.index = index;
+        console.log(preferedTrain);
+        return {
+            speech: "Confirm",
+            displayText: "Confirm",
+            source: 'book_ticket'
+        };
+    }
+
     let itin_length = summary.journeyList.length;
 
     if (preference === "earliest") {
@@ -39,5 +54,6 @@ function extractUserPreferedTrain(summary, preference) {
 }
 
 module.exports = {
+    preferedTrain:preferedTrain,
     extractUserPreferedTrain : extractUserPreferedTrain
 };

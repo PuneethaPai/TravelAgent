@@ -7,16 +7,16 @@ function showJourneyList(ListViewData){
     let journeys=ListViewData.journeyList;
     elementList=[];
     let banner= {
-        "title": "Outbound",
-        "image_url": "https://invitationdigital-res-2.cloudinary.com/image/upload/f_auto,fl_strip_profile,w_628,c_crop/w_628,h_384,c_fill/trainline_up_to_43_off_tickets_with_advance_bookings_at_trainline_premium_offer_image.jpg",
-        "subtitle":ListViewData.source+" >>> "+ListViewData.destination+"\n"+ListViewData.seats+" Passengers\n" ,
+        "title": ListViewData.source+"  >>>  "+ListViewData.destination,
+        "image_url": "https://mvp.tribesgds.com/dyn/UQ/OE/UQOE-wK-8g0/_/tIIyubfFgL0/Bqnr/trainline-logo.png",
+        "subtitle":ListViewData.seats+" Passenger" ,
     };
     elementList.push(banner);
     for (let i = 0; i < 3; i++){
         let url = serverURL + "summary?q=";
         format={
             "title":journeys[i].duration.toString(),
-            "subtitle": "Start:"+journeys[i].start+"\n"+"End:"+journeys[i].end+"\n"+"Fare:"+journeys[i].fare+"\n",
+            "subtitle": "Start:"+journeys[i].start+"\n"+"End:"+journeys[i].end+"\n"+"Fare: £"+journeys[i].fare+"\n",
             "buttons": [
                 {
                     "title": "Book",

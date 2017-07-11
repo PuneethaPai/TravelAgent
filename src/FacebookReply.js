@@ -3,6 +3,7 @@ const
     apiaiApp = require('apiai')(ClientAccessToken),
     journeyList = require('./journeyListView.js'),
     request = require('request'),
+    userPreference=require('./UserPrefernce.js'),
     apiWebHook = require('./ApiWebHook.js'),
     config = require('config'),
     timePreference = {
@@ -38,7 +39,7 @@ const
 let
     serverURL = process.env.serverURL || config.serverURL,
     listViewDetails = apiWebHook.listViewDetails,
-    preffered_train = apiWebHook.preferedTrain,
+    preffered_train = userPreference.preferedTrain,
     searchParameters = apiWebHook.searchParameters,
     showJourneyList = journeyList.showJourneyList,
     getSearchURL = journeyList.getSearchURL;
@@ -75,7 +76,7 @@ function getFacebookFormattedReply(response) {
                     "elements": [
                         {
                             "title": preffered_train.duration,
-                            "subtitle": "Start:" + preffered_train.start + "\n" + "End:" + preffered_train.end + "\n" + "Fare:" + preffered_train.fare + "\n",
+                            "subtitle": "Start:" + preffered_train.start + "\n" + "End:" + preffered_train.end + "\n" + "Fare: £" + preffered_train.fare + "\n",
                             "image_url": "https://invitationdigital-res-2.cloudinary.com/image/upload/f_auto,fl_strip_profile,w_628,c_crop/w_628,h_384,c_fill/trainline_up_to_43_off_tickets_with_advance_bookings_at_trainline_premium_offer_image.jpg",
                             "buttons": [
                                 {

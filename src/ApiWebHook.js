@@ -11,10 +11,8 @@ const
     };
 
 let
-    global_seats = 1,
     fastrackSummaryDetails = {},
     listViewDetails = {},
-    preferedTrain = {},
     searchParameters = {};
 
 function apiWebHookHandler(req, res) {
@@ -135,22 +133,8 @@ function apiWebHookHandler(req, res) {
 
     let preference = parameters['Preferences'];
 
-    function PreferenceDetailExtract(index) {
-        preferedTrain.start = listViewDetails.journeyList[index].start;
-        preferedTrain.end = listViewDetails.journeyList[index].end;
-        preferedTrain.duration = listViewDetails.journeyList[index].duration;
-        preferedTrain.fare = parseInt(listViewDetails.journeyList[index].fare, 10) * global_seats;
-        preferedTrain.index = index;
-        console.log("User Prefered train:- " + preferedTrain);
-        return res.json({
-            speech: "Confirm",
-            displayText: "Confirm",
-            source: 'book_ticket'
-        });
-    }
-
     if (req.body.result.action === 'apply_preferences' && preference !== "" && listViewDetails.journeyList.length > 0) {
-        return extractUserPreferenceTrain(listViewDetails, preference)
+        return res.json(extractUserPreferenceTrain(listViewDetails, preference,seat))
     }
 }
 
@@ -158,6 +142,5 @@ module.exports = {
     fastrackSummaryDetails: fastrackSummaryDetails,
     listViewDetails: listViewDetails,
     apiWebHookHandler: apiWebHookHandler,
-    preferedTrain: preferedTrain,
     searchParameters: searchParameters
 };
