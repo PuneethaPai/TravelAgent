@@ -1,48 +1,51 @@
 const
-    ClientAccessToken='80008143ef7e426e8ae929fa186012b3',
+    ClientAccessToken = '80008143ef7e426e8ae929fa186012b3',
     apiaiApp = require('apiai')(ClientAccessToken),
-    journeyList=require('./journeyListView.js'),
+    journeyList = require('./journeyListView.js'),
     request = require('request'),
     apiWebHook = require('./ApiWebHook.js'),
     config = require('config'),
     timePreference = {
-        "text":"Select Journey Time",
-        "quick_replies":[
+        "text": "Preferred Departure Time",
+        "quick_replies": [
             {
-                "content_type":"text",
-                "title":"Morning",
-                "payload":"Morning",
+                "content_type": "text",
+                "title": "Morning",
+                "image_url": "https://maxcdn.icons8.com/Share/icon/Plants//plant_under_sun1600.png",
+                "payload": "Morning",
             },
             {
-                "content_type":"text",
-                "title":"Afternoon",
-                "payload":"Afternoon",
+                "content_type": "text",
+                "title": "Afternoon",
+                "image_url": "https://image.flaticon.com/icons/svg/54/54241.svg",
+                "payload": "Afternoon",
             },
             {
-                "content_type":"text",
-                "title":"Evening",
-                "payload":"Evening",
+                "content_type": "text",
+                "title": "Evening",
+                "image_url": "https://www.shareicon.net/data/512x512/2016/07/09/793459_sun_512x512.png",
+                "payload": "Evening",
             },
             {
-                "content_type":"text",
-                "title":"Night",
-                "payload":"Night",
+                "content_type": "text",
+                "title": "Night",
+                "image_url": "https://s-media-cache-ak0.pinimg.com/originals/b5/8c/2e/b58c2e7955952e17945ea077ae6dfe56.jpg",
+                "payload": "Night",
             }
         ]
     };
 
-
 let
     serverURL = process.env.serverURL || config.serverURL,
     listViewDetails = apiWebHook.listViewDetails,
-    preffered_train=apiWebHook.preferedTrain,
-    searchParameters=apiWebHook.searchParameters,
+    preffered_train = apiWebHook.preferedTrain,
+    searchParameters = apiWebHook.searchParameters,
     showJourneyList = journeyList.showJourneyList,
     getSearchURL = journeyList.getSearchURL;
 
 function getFacebookFormattedReply(response) {
     let aiText = response.result.fulfillment.speech;
-    if(aiText === 'Ask Time'){
+    if (aiText === 'Ask Time') {
         return timePreference;
     }
     if (aiText === "Schedule") {
@@ -113,16 +116,16 @@ function sendMessage(event) {
             }
         };
         request(options, (error, response) => {
-          if (error) {
-              console.log('Error sending message: ', error);
-          } else if (response.body.error) {
-              console.log('Error: ', response.body.error);
-          }
+            if (error) {
+                console.log('Error sending message: ', error);
+            } else if (response.body.error) {
+                console.log('Error: ', response.body.error);
+            }
         });
     });
 
     apiai.on('error', (error) => {
-    console.log(error);
+        console.log(error);
     });
 
     apiai.end();
@@ -136,7 +139,7 @@ function senderAction(event) {
         method: 'POST',
         json: {
             recipient: {id: sender},
-            "sender_action":"typing_on"
+            "sender_action": "typing_on"
         }
     }, (error, response) => {
         if (error) {
@@ -148,6 +151,6 @@ function senderAction(event) {
 }
 
 module.exports = {
-    sendMessage : sendMessage,
-    senderAction:senderAction,
+    sendMessage: sendMessage,
+    senderAction: senderAction,
 };
