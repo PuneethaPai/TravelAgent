@@ -17,7 +17,7 @@ const
             {
                 "content_type": "text",
                 "title": "Afternoon",
-                "image_url": "https://image.flaticon.com/icons/svg/54/54241.svg",
+                "image_url": "https://d30y9cdsu7xlg0.cloudfront.net/png/401715-200.png",
                 "payload": "Afternoon",
             },
             {
@@ -29,7 +29,7 @@ const
             {
                 "content_type": "text",
                 "title": "Night",
-                "image_url": "https://s-media-cache-ak0.pinimg.com/originals/b5/8c/2e/b58c2e7955952e17945ea077ae6dfe56.jpg",
+                "image_url": "https://d30y9cdsu7xlg0.cloudfront.net/png/1028-200.png",
                 "payload": "Night",
             }
         ]
