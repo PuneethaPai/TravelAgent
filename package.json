@@ -16,13 +16,10 @@
   "dependencies": {
     "apiai": "^4.0.2",
     "body-parser": "^1.17.2",
-    "chromedriver": "^2.30.1",
     "config": "^1.26.1",
     "express": "^4.15.3",
-    "moment-timezone": "^0.5.13",
     "nodemon": "^1.11.0",
     "replaceall": "^0.1.6",
-    "request": "^2.81.0",
-    "selenium-webdriver": "^3.4.0"
+    "request": "^2.81.0"
   }
 }

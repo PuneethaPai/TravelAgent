@@ -1,6 +1,5 @@
 const
     request = require('request'),
-    moment = require('moment-timezone'),
     stations = require("../assets/stations.json"),
     extractUserPreferenceTrain = require('./UserPrefernce.js').extractUserPreferedTrain,
     dayTimeMap = {
@@ -15,14 +14,48 @@ let
     listViewDetails = {},
     searchParameters = {};
 
+
 function apiWebHookHandler(req, res) {
+
+    function validate(stationName, Label) {
+        console.log(Label);
+        if (!stations[stationName.toUpperCase()]) {
+            return res.json({
+                speech: "The " + Label + " is Incorrect",
+                displayText: "The " + Label + " is Incorrect",
+                source: 'fetch_schedule'
+            });
+        }
+    }
+
     let
         parameters = req.body.result.parameters,
         journeyTime = dayTimeMap[parameters['time']],
+
         source = parameters['source'],
         destination = parameters['destination'],
         date = parameters['journey-date'],
         seat = parseInt(parameters['seats'], 10);
+
+    if (req.body.result.action === 'fetch_schedule' && source !== "") {
+        validate(source, "Source");
+    }
+
+    if (req.body.result.action === 'fetch_schedule' && destination !== "") {
+        validate(destination, "Destination");
+    }
+
+    if (req.body.result.action === 'fetch_schedule' && source !== "" && destination !== "") {
+        let source_code = stations[source.toUpperCase()];
+        let destination_code = stations[destination.toUpperCase()];
+        if (destination_code === source_code) {
+            return res.json({
+                speech: "Great I guess You Are Already There\nHave a great time",
+                displayText: "... Great I guess You Are Already There\nHave a great time",
+                source: 'fetch_schedule'
+            });
+        }
+    }
     console.log(parameters);
     if (req.body.result.action === 'fetch_schedule' && source !== "" && destination !== "" && date !== "" && journeyTime === undefined) {
         return res.json({
@@ -34,36 +67,10 @@ function apiWebHookHandler(req, res) {
     if (req.body.result.action === 'fetch_schedule' && source !== "" && destination !== "" && date !== "" && journeyTime !== "") {
         let source_code = stations[source.toUpperCase()];
         let destination_code = stations[destination.toUpperCase()];
-
         listViewDetails.source = source;
         listViewDetails.destination = destination;
         listViewDetails.date = date;
         listViewDetails.seats = seat;
-
-        // Check For Incorrect Source Or Destination
-        if (typeof destination_code === 'undefined') {
-            return res.json({
-                speech: "The Destination is Incorrect",
-                displayText: "The Destination is Incorrect",
-                source: 'fetch_schedule'
-            });
-        }
-
-        if (!source_code) {
-            return res.json({
-                speech: "The Source is Incorrect",
-                displayText: "The Source is Incorrect",
-                source: 'fetch_schedule'
-            });
-        }
-
-        if (destination_code === source_code) {
-            return res.json({
-                speech: "Great I guess You Are Already There\nHave a great time",
-                displayText: "... Great I guess You Are Already There\nHave a great time",
-                source: 'fetch_schedule'
-            });
-        }
 
         searchParameters.origin = source_code;
         searchParameters.destination = destination_code;
