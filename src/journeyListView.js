@@ -9,7 +9,7 @@ function showJourneyList(ListViewData){
     let banner= {
         "title": ListViewData.source+"  >>>  "+ListViewData.destination,
         "image_url": "https://mvp.tribesgds.com/dyn/UQ/OE/UQOE-wK-8g0/_/tIIyubfFgL0/Bqnr/trainline-logo.png",
-        "subtitle":ListViewData.seats+" Passenger" ,
+        "subtitle":ListViewData.date+"\n"+ListViewData.seats+" Passenger" ,
     };
     elementList.push(banner);
     for (let i = 0; i < 3; i++){

@@ -4,10 +4,10 @@ const
     stations = require("../assets/stations.json"),
     extractUserPreferenceTrain = require('./UserPrefernce.js').extractUserPreferedTrain,
     dayTimeMap = {
-        "morning":'06-00',
-        "afternoon":'12-00',
-        "evening":'16-00',
-        "night":'20-00'
+        "morning": '06-00',
+        "afternoon": '12-00',
+        "evening": '16-00',
+        "night": '20-00'
     };
 
 let
@@ -37,6 +37,7 @@ function apiWebHookHandler(req, res) {
 
         listViewDetails.source = source;
         listViewDetails.destination = destination;
+        listViewDetails.date = date;
         listViewDetails.seats = seat;
 
         // Check For Incorrect Source Or Destination
@@ -134,7 +135,7 @@ function apiWebHookHandler(req, res) {
     let preference = parameters['Preferences'];
 
     if (req.body.result.action === 'apply_preferences' && preference !== "" && listViewDetails.journeyList.length > 0) {
-        return res.json(extractUserPreferenceTrain(listViewDetails, preference,seat))
+        return res.json(extractUserPreferenceTrain(listViewDetails, preference, seat))
     }
 }
 
