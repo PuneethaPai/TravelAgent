@@ -7,7 +7,7 @@ const
     apiWebHook = require('./ApiWebHook.js'),
     config = require('config'),
     timePreference = {
-        "text": "Preferred Departure Time",
+        "text": "Choose Departure Time",
         "quick_replies": [
             {
                 "content_type": "text",
