@@ -6,10 +6,11 @@ function showJourneyList(ListViewData){
     let list_len=ListViewData.journeyList.length;
     let journeys=ListViewData.journeyList;
     elementList=[];
+    let date = new Date(ListViewData.date).toDateString();
     let banner= {
         "title": ListViewData.source+"  >>>  "+ListViewData.destination,
         "image_url": "https://mvp.tribesgds.com/dyn/UQ/OE/UQOE-wK-8g0/_/tIIyubfFgL0/Bqnr/trainline-logo.png",
-        "subtitle":ListViewData.date+"\n"+ListViewData.seats+" Passenger" ,
+        "subtitle":date+"\n"+ListViewData.seats+" Passenger" ,
     };
     elementList.push(banner);
     for (let i = 0; i < 3; i++){
