@@ -6,7 +6,7 @@ const
     config = require('config'),
     userPreference=require('./UserPrefernce.js'),
     apiWebHook = require('./ApiWebHook.js'),
-    view = require('./PurposeSlideView.js'),
+    view = require('./View.js'),
     purposeSlideView = view.purposeSlideView,
     timePreferenceView = view.timePreference;
 
