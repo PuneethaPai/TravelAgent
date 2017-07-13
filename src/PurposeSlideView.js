@@ -53,5 +53,5 @@ let timePreference = {
 
 module.exports = {
     purposeSlideView:purposeSlideView,
-    timePreference:timePreference
+    timePreferenceView:timePreference
 }

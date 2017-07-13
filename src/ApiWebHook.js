@@ -18,7 +18,6 @@ let
 function apiWebHookHandler(req, res) {
 
     function validate(stationName, Label) {
-        console.log(Label);
         if (!stations[stationName.toUpperCase()]) {
             return res.json({
                 speech: "The " + Label + " is Incorrect",
@@ -56,7 +55,6 @@ function apiWebHookHandler(req, res) {
             });
         }
     }
-    console.log(parameters);
     if (req.body.result.action === 'fetch_schedule' && source !== "" && destination !== "" && date !== "" && journeyTime === undefined) {
         return res.json({
             speech: "Ask Time",

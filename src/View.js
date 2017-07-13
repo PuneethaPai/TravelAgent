@@ -44,7 +44,7 @@ let purposeSlideView = {
     }
 };
 
-let timePreference = {
+let timePreferenceView = {
     "text": "Choose Departure Time",
     "quick_replies": [
         {
@@ -74,7 +74,31 @@ let timePreference = {
     ]
 };
 
+let travelPreferenceView={
+    "text": "Any Preference ?",
+    "quick_replies": [
+        {
+            "content_type": "text",
+            "title": "Find Cheapest",
+            // "image_url": "http://pngimages.net/sites/default/files/saving-png-image-86788.png",
+            "payload": "Get The Cheapest",
+        },
+        {
+            "content_type": "text",
+            "title": "Get The Fastest",
+            // "image_url": "http://pngimages.net/sites/default/files/saving-png-image-86788.png",
+            "payload": "Get The Fastest",
+        },
+        {
+            "content_type": "text",
+            "title": "Show Earliest",
+            // "image_url": "https://d30y9cdsu7xlg0.cloudfront.net/png/446164-200.png",
+            "payload": "Show Earliest",
+        }
+    ]
+};
 module.exports = {
     purposeSlideView:purposeSlideView,
-    timePreference:timePreference
-}
+    timePreferenceView:timePreferenceView,
+    travelPreferenceView:travelPreferenceView
+};

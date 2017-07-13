@@ -37,7 +37,7 @@ function extractUserPreferedTrain(summary, preference) {
         let fastest = 0;
         for (i = 0; i < itin_length; i++) {
             let train = summary.journeyList[i];
-
+            console.log(train);
             let hr = train.duration.split(' ')[0].match(/\d/g);
             hr = hr.join("");
             let min = train.duration.split(' ')[1].match(/\d/g);

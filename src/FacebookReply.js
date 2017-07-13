@@ -8,7 +8,8 @@ const
     apiWebHook = require('./ApiWebHook.js'),
     view = require('./View.js'),
     purposeSlideView = view.purposeSlideView,
-    timePreferenceView = view.timePreference;
+    timePreferenceView = view.timePreferenceView,
+    travelPreferenceView=view.travelPreferenceView;
 
 let
     serverURL = process.env.serverURL || config.serverURL,
@@ -21,7 +22,7 @@ let
 function getFacebookFormattedReply(response) {
     let aiText = response.result.fulfillment.speech;
     let action = response.result.action;
-    console.log(action);
+    console.log(response.result.parameters);
     if(action.indexOf("greetings.") > -1) {
         return {
             "text":aiText,
@@ -34,7 +35,7 @@ function getFacebookFormattedReply(response) {
                 {
                     "content_type": "text",
                     "title": "Book me a ticket",
-                    "payload": "How can i help You?",
+                    "payload": "Book me a ticket ",
                 }]
         }
     }
@@ -98,6 +99,27 @@ function sendMessage(sender, text) {
         sessionId: sender // use any arbitrary id
     });
 
+    function preferenceQuickReply() {
+        request({
+            url: 'https://graph.facebook.com/v2.6/me/messages',
+            qs: {access_token: 'EAAPfT94PkckBAPqY1ZAFgtMecs7hRQnF4bgh7yu1xeBft4pKx7wVgwldZCangBx6PYPInwwTkL6ZBaL64gLCT7PBrwyqBllS2eYnv2eJBGRgMZAKnh1X8volYUaaCDPZCnLVLAcalF9EV96VLVlG8iGQuqZAQey8dqk0zDLyROMgZDZD'},
+            method: 'POST',
+            json: {
+                recipient: {id: sender},
+                message:travelPreferenceView
+            }
+        }, (error, resp) => {
+            if (error) {
+                console.log('Error sending message: ', error);
+            } else if (resp.body.error) {
+                console.log('Error: ', resp.body.error);
+            }
+            else{
+                console.log("Success");
+            }
+        });
+    }
+
     apiai.on('response', (response) => {
         let customResponse = getFacebookFormattedReply(response);
         let options = {
@@ -109,11 +131,14 @@ function sendMessage(sender, text) {
                 message: customResponse
             }
         };
-        request(options, (error, response) => {
+        request(options, (error, res) => {
             if (error) {
                 console.log('Error sending message: ', error);
-            } else if (response.body.error) {
-                console.log('Error: ', response.body.error);
+            } else if (res.body.error) {
+                console.log('Error: ', res.body.error);
+            }
+            else if(response.result.fulfillment.speech==="Schedule") {
+                preferenceQuickReply();
             }
         });
     });
