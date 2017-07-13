@@ -47,12 +47,22 @@ app.get('/summary', function (req, res) {
 
 /* Handling all messenges */
 app.post('/webhook', (req, res) => {
+    function getText(event) {
+        if (event.postback) {
+            return event.postback.payload;
+        }
+        return event.message.text;
+    }
+
     if (req.body.object === 'page') {
         req.body.entry.forEach((entry) => {
             entry.messaging.forEach((event) => {
-                if (event.message && event.message.text) {
-                    senderAction(event);
-                    sendMessage(event);
+                console.log(event);
+                let sender = event.sender.id;
+                let text = getText(event);
+                if (text) {
+                    senderAction(sender);
+                    sendMessage(sender, text);
                 }
             });
         });

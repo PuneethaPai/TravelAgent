@@ -3,38 +3,12 @@ const
     apiaiApp = require('apiai')(ClientAccessToken),
     journeyList = require('./journeyListView.js'),
     request = require('request'),
+    config = require('config'),
     userPreference=require('./UserPrefernce.js'),
     apiWebHook = require('./ApiWebHook.js'),
-    config = require('config'),
-    timePreference = {
-        "text": "Choose Departure Time",
-        "quick_replies": [
-            {
-                "content_type": "text",
-                "title": "Morning",
-                "image_url": "https://maxcdn.icons8.com/Share/icon/Plants//plant_under_sun1600.png",
-                "payload": "Morning",
-            },
-            {
-                "content_type": "text",
-                "title": "Afternoon",
-                "image_url": "https://d30y9cdsu7xlg0.cloudfront.net/png/401715-200.png",
-                "payload": "Afternoon",
-            },
-            {
-                "content_type": "text",
-                "title": "Evening",
-                "image_url": "https://www.shareicon.net/data/512x512/2016/07/09/793459_sun_512x512.png",
-                "payload": "Evening",
-            },
-            {
-                "content_type": "text",
-                "title": "Night",
-                "image_url": "https://d30y9cdsu7xlg0.cloudfront.net/png/1028-200.png",
-                "payload": "Night",
-            }
-        ]
-    };
+    view = require('./PurposeSlideView.js'),
+    purposeSlideView = view.purposeSlideView,
+    timePreferenceView = view.timePreference;
 
 let
     serverURL = process.env.serverURL || config.serverURL,
@@ -46,8 +20,24 @@ let
 
 function getFacebookFormattedReply(response) {
     let aiText = response.result.fulfillment.speech;
+    let action = response.result.action;
+    console.log(action);
+    if(action.indexOf("greetings.") > -1) {
+        return {
+            "text":aiText,
+            "quick_replies":[
+                {
+                    "content_type": "text",
+                    "title": "How can I help You?",
+                    "payload": "How can i help You?",
+                }]
+        }
+    }
+    if(action.indexOf("purpose") > -1) {
+        return purposeSlideView;
+    }
     if (aiText === 'Ask Time') {
-        return timePreference;
+        return timePreferenceView;
     }
     if (aiText === "Schedule") {
         return {
@@ -97,9 +87,7 @@ function getFacebookFormattedReply(response) {
     }
 }
 
-function sendMessage(event) {
-    let sender = event.sender.id;
-    let text = event.message.text;
+function sendMessage(sender, text) {
     console.log("Sender: " + sender + "; Mesage: " + text);
     let apiai = apiaiApp.textRequest(text, {
         sessionId: sender // use any arbitrary id
@@ -132,8 +120,7 @@ function sendMessage(event) {
     apiai.end();
 }
 
-function senderAction(event) {
-    let sender = event.sender.id;
+function senderAction(sender) {
     request({
         url: 'https://graph.facebook.com/v2.6/me/messages',
         qs: {access_token: 'EAAPfT94PkckBAPqY1ZAFgtMecs7hRQnF4bgh7yu1xeBft4pKx7wVgwldZCangBx6PYPInwwTkL6ZBaL64gLCT7PBrwyqBllS2eYnv2eJBGRgMZAKnh1X8volYUaaCDPZCnLVLAcalF9EV96VLVlG8iGQuqZAQey8dqk0zDLyROMgZDZD'},
