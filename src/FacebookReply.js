@@ -28,7 +28,12 @@ function getFacebookFormattedReply(response) {
             "quick_replies":[
                 {
                     "content_type": "text",
-                    "title": "How can I help You?",
+                    "title": "How may I help You?",
+                    "payload": "How can i help You?",
+                },
+                {
+                    "content_type": "text",
+                    "title": "Book me a ticket",
                     "payload": "How can i help You?",
                 }]
         }

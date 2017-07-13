@@ -5,13 +5,13 @@ let purposeSlideView = {
             "template_type": "generic",
             "elements": [
                 {
-                    "title": "Plan my Journey",
+                    "title": "Plan My Journey",
                     "image_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxiSbi_xuqLYRbQj3wvC0Ndyn2zRpqTr90O1YzwkgFyypfRY13",
-                    "subtitle": "Travel with us",
+                    "subtitle": "Travel with us!",
                     "buttons": [
                         {
                             "type": "postback",
-                            "title": "Get On board",
+                            "title": "Get Me On board",
                             "payload": "book me a ticket"
                         }
                     ]
@@ -30,7 +30,7 @@ let purposeSlideView = {
                 },{
                     "title": "About Virgin Trains",
                     "image_url": "http://www.2120580.cloudcommercepro.com/wp-content/uploads/2017/04/virgin.png",
-                    "subtitle": "Virgin Trains is a train operating company in the United Kingdom owned by Virgin Rail Group that has operated the InterCity West Coast franchise since",
+                    "subtitle": "We’re on a mission to make every second you spend with us awesome",
                     "buttons": [
                         {
                             "type": "web_url",
