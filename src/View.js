@@ -5,14 +5,37 @@ let purposeSlideView = {
             "template_type": "generic",
             "elements": [
                 {
-                    "title": "Travel with Us",
-                    "image_url": "https://mvp.tribesgds.com/dyn/UQ/OE/UQOE-wK-8g0/_/tIIyubfFgL0/Bqnr/trainline-logo.png",
-                    "subtitle": "We\'ve got the best seat for you",
+                    "title": "Plan my Journey",
+                    "image_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxiSbi_xuqLYRbQj3wvC0Ndyn2zRpqTr90O1YzwkgFyypfRY13",
+                    "subtitle": "Travel with us",
                     "buttons": [
                         {
                             "type": "postback",
-                            "title": "book me a ticket",
+                            "title": "Get On board",
                             "payload": "book me a ticket"
+                        }
+                    ]
+                },
+                {
+                    "title": "Show Upcoming Trains to London",
+                    "image_url": "https://us.123rf.com/450wm/jemastock/jemastock1510/jemastock151001176/47322629-london-concept-with-landmarks-icons-design.jpg?ver=6",
+                    "subtitle": "London Bridge is falling Down ....falling Down...",
+                    "buttons": [
+                        {
+                            "type": "postback",
+                            "title": "Yes Go!",
+                            "payload": "Book me a ticket today afternoon to London"
+                        }
+                    ]
+                },{
+                    "title": "About Virgin Trains",
+                    "image_url": "http://www.2120580.cloudcommercepro.com/wp-content/uploads/2017/04/virgin.png",
+                    "subtitle": "Virgin Trains is a train operating company in the United Kingdom owned by Virgin Rail Group that has operated the InterCity West Coast franchise since",
+                    "buttons": [
+                        {
+                            "type": "web_url",
+                            "title": "Know More",
+                            "url": "https://www.virgintrains.co.uk/about",
                         }
                     ]
                 }
