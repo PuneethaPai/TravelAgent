@@ -6,7 +6,7 @@ let purposeSlideView = {
             "elements": [
                 {
                     "title": "Plan My Journey",
-                    "image_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxiSbi_xuqLYRbQj3wvC0Ndyn2zRpqTr90O1YzwkgFyypfRY13",
+                    "image_url": "https://invitationdigital-res-2.cloudinary.com/image/upload/f_auto,fl_strip_profile,w_628,c_crop/w_628,h_384,c_fill/trainline_up_to_43_off_tickets_with_advance_bookings_at_trainline_premium_offer_image.jpg",
                     "subtitle": "Travel with us!",
                     "buttons": [
                         {
@@ -80,19 +80,19 @@ let travelPreferenceView={
         {
             "content_type": "text",
             "title": "Find Cheapest",
-            // "image_url": "http://pngimages.net/sites/default/files/saving-png-image-86788.png",
+            "image_url": "http://medias.development-institute.com/Site_dedie/2017/ICI/Picto_Low_Cost.png",
             "payload": "Get The Cheapest",
         },
         {
             "content_type": "text",
             "title": "Get The Fastest",
-            // "image_url": "http://pngimages.net/sites/default/files/saving-png-image-86788.png",
+            "image_url": "https://maxcdn.icons8.com/Share/icon/Animals//running_rabbit_filled1600.png",
             "payload": "Get The Fastest",
         },
         {
             "content_type": "text",
             "title": "Show Earliest",
-            // "image_url": "https://d30y9cdsu7xlg0.cloudfront.net/png/446164-200.png",
+            "image_url": "https://d30y9cdsu7xlg0.cloudfront.net/png/446164-200.png",
             "payload": "Show Earliest",
         }
     ]

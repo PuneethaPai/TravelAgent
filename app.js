@@ -60,8 +60,7 @@ app.post('/webhook', (req, res) => {
                 let sender = event.sender.id;
                 let text = getText(event);
                 if (text) {
-                    senderAction(sender);
-                    sendMessage(sender, text);
+                    senderAction(sender,text);
                 }
             });
         });

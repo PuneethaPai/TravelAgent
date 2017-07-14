@@ -37,13 +37,25 @@ function extractUserPreferedTrain(summary, preference) {
         let fastest = 0;
         for (i = 0; i < itin_length; i++) {
             let train = summary.journeyList[i];
-            console.log(train);
-            let hr = train.duration.split(' ')[0].match(/\d/g);
-            hr = hr.join("");
-            let min = train.duration.split(' ')[1].match(/\d/g);
-            min = min.join("");
 
+            let hr="0";
+            let min="0";
+
+            let firstPart = train.duration.split(' ')[0];
+
+            if(firstPart.indexOf("hr") > -1)
+            {
+                let hr1=firstPart.match(/\d/g);
+                hr = hr1.join("");
+                min = train.duration.split(' ')[1].match(/\d/g);
+                min = min.join("");
+            }
+
+            else {
+                min = firstPart.match(/\d/g).join("");
+            }
             const dur = parseInt(hr, 10) * 60 + parseInt(min, 10);
+
             if (min_dur > dur) {
                 min_dur = dur;
                 fastest = i;

@@ -72,7 +72,7 @@ function getFacebookFormattedReply(response) {
                     "elements": [
                         {
                             "title": preffered_train.duration,
-                            "subtitle": "Start:" + preffered_train.start + "\n" + "End:" + preffered_train.end + "\n" + "Fare: £" + preffered_train.fare + "\n",
+                            "subtitle": "Start:" + preffered_train.start + "\n" + "End:" + preffered_train.end + "\n" + "Total Fare: £" + preffered_train.fare + "\n",
                             "image_url": "https://invitationdigital-res-2.cloudinary.com/image/upload/f_auto,fl_strip_profile,w_628,c_crop/w_628,h_384,c_fill/trainline_up_to_43_off_tickets_with_advance_bookings_at_trainline_premium_offer_image.jpg",
                             "buttons": [
                                 {
@@ -150,7 +150,7 @@ function sendMessage(sender, text) {
     apiai.end();
 }
 
-function senderAction(sender) {
+function senderAction(sender,text) {
     request({
         url: 'https://graph.facebook.com/v2.6/me/messages',
         qs: {access_token: 'EAAPfT94PkckBAPqY1ZAFgtMecs7hRQnF4bgh7yu1xeBft4pKx7wVgwldZCangBx6PYPInwwTkL6ZBaL64gLCT7PBrwyqBllS2eYnv2eJBGRgMZAKnh1X8volYUaaCDPZCnLVLAcalF9EV96VLVlG8iGQuqZAQey8dqk0zDLyROMgZDZD'},
@@ -164,6 +164,9 @@ function senderAction(sender) {
             console.log('Error sending message: ', error);
         } else if (response.body.error) {
             console.log('Error: ', response.body.error);
+        }
+        else{
+            sendMessage(sender,text);
         }
     });
 }
