@@ -27,7 +27,7 @@ let purposeSlideView = {
                             "payload": "Book me a ticket today afternoon to London"
                         }
                     ]
-                },{
+                }, {
                     "title": "About Virgin Trains",
                     "image_url": "http://www.2120580.cloudcommercepro.com/wp-content/uploads/2017/04/virgin.png",
                     "subtitle": "We’re on a mission to make every second you spend with us awesome",
@@ -74,7 +74,33 @@ let timePreferenceView = {
     ]
 };
 
-let travelPreferenceView={
+let datePreferenceView = {
+    "text": "Choose Day Of Travel",
+    "quick_replies": [
+        {
+            "content_type": "text",
+            "title": "Today",
+            "payload": "Today",
+        },
+        {
+            "content_type": "text",
+            "title": "Tomorrow",
+            "payload": "Tomorrow",
+        },
+        {
+            "content_type": "text",
+            "title": "Next Monday",
+            "payload": "Next Monday",
+        },
+        {
+            "content_type": "text",
+            "title": "Next Friday",
+            "payload": "Next Friday",
+        }
+    ]
+};
+
+let travelPreferenceView = {
     "text": "Any Preference ?",
     "quick_replies": [
         {
@@ -98,7 +124,8 @@ let travelPreferenceView={
     ]
 };
 module.exports = {
-    purposeSlideView:purposeSlideView,
-    timePreferenceView:timePreferenceView,
-    travelPreferenceView:travelPreferenceView
+    purposeSlideView: purposeSlideView,
+    timePreferenceView: timePreferenceView,
+    travelPreferenceView: travelPreferenceView,
+    datePreferenceView: datePreferenceView
 };

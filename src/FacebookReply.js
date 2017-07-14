@@ -1,3 +1,4 @@
+
 const
     ClientAccessToken = '80008143ef7e426e8ae929fa186012b3',
     apiaiApp = require('apiai')(ClientAccessToken),
@@ -9,7 +10,8 @@ const
     view = require('./View.js'),
     purposeSlideView = view.purposeSlideView,
     timePreferenceView = view.timePreferenceView,
-    travelPreferenceView=view.travelPreferenceView;
+    travelPreferenceView=view.travelPreferenceView,
+    datePreferenceView = view.datePreferenceView;
 
 let
     serverURL = process.env.serverURL || config.serverURL,
@@ -41,6 +43,9 @@ function getFacebookFormattedReply(response) {
     }
     if(action.indexOf("options") > -1) {
         return purposeSlideView;
+    }
+    if (aiText === 'Ask Date') {
+        return datePreferenceView;
     }
     if (aiText === 'Ask Time') {
         return timePreferenceView;
