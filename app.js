@@ -11,7 +11,6 @@ const
 const
     fastrackSummaryDetails = apiWebHook.fastrackSummaryDetails,
     apiWebHookHandler = apiWebHook.apiWebHookHandler,
-    sendMessage = facebookReply.sendMessage,
     senderAction = facebookReply.senderAction;
 
 const app = express();

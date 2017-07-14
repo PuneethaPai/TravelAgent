@@ -172,6 +172,5 @@ function senderAction(sender,text) {
 }
 
 module.exports = {
-    sendMessage: sendMessage,
     senderAction: senderAction,
 };
