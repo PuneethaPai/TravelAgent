@@ -11,7 +11,7 @@ let purposeSlideView = {
                     "buttons": [
                         {
                             "type": "postback",
-                            "title": "Get Me On board",
+                            "title": "Get Me On board!",
                             "payload": "book me a ticket"
                         }
                     ]
@@ -19,7 +19,7 @@ let purposeSlideView = {
                 {
                     "title": "Show Upcoming Trains to London",
                     "image_url": "https://us.123rf.com/450wm/jemastock/jemastock1510/jemastock151001176/47322629-london-concept-with-landmarks-icons-design.jpg?ver=6",
-                    "subtitle": "London Bridge is falling Down ....falling Down...",
+                    "subtitle": "London, A great destination!",
                     "buttons": [
                         {
                             "type": "postback",

@@ -23,23 +23,23 @@ function getFacebookFormattedReply(response) {
     let aiText = response.result.fulfillment.speech;
     let action = response.result.action;
     console.log(response.result.parameters);
-    if(action.indexOf("greetings.") > -1) {
+    if(action.indexOf("greetings.") > -1 || action.indexOf("purpose") > -1) {
         return {
             "text":aiText,
             "quick_replies":[
                 {
                     "content_type": "text",
-                    "title": "How may I help You?",
-                    "payload": "How can i help You?",
+                    "title": "What can I do?",
+                    "payload": "What can I do?",
                 },
                 {
                     "content_type": "text",
-                    "title": "Book me a ticket",
-                    "payload": "Book me a ticket ",
+                    "title": "Book a ticket for me",
+                    "payload": "Book a ticket for me",
                 }]
         }
     }
-    if(action.indexOf("purpose") > -1) {
+    if(action.indexOf("options") > -1) {
         return purposeSlideView;
     }
     if (aiText === 'Ask Time') {
