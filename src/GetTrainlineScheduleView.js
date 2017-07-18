@@ -16,7 +16,6 @@ function getSchedule() {
         showJourneyList = journeyList.showJourneyList,
         getSearchURL = journeyList.getSearchURL;
 
-    console.log(journey);
     let list_len = journey.summary.length;
     let summaryList = [];
     let listViewList = [];
