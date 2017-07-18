@@ -3,9 +3,9 @@ const config = require('config');
 let serverURL = process.env.serverURL || config.serverURL;
 
 function showJourneyList(ListViewData) {
-    let list_len = ListViewData.journeyList.length;
-    let journeys = ListViewData.journeyList;
-    elementList = [];
+    let
+        journeys = ListViewData.journeyList,
+        elementList = [];
     let date = new Date(ListViewData.date).toDateString();
     let banner = {
         "title": ListViewData.source + "  >>>  " + ListViewData.destination,

@@ -1,34 +1,25 @@
-
 const
     ClientAccessToken = '80008143ef7e426e8ae929fa186012b3',
     apiaiApp = require('apiai')(ClientAccessToken),
-    journeyList = require('./journeyListView.js'),
     request = require('request'),
     config = require('config'),
-    userPreference=require('./UserPrefernce.js'),
-    apiWebHook = require('./ApiWebHook.js'),
-    view = require('./View.js'),
-    purposeSlideView = view.purposeSlideView,
-    timePreferenceView = view.timePreferenceView,
-    travelPreferenceView=view.travelPreferenceView,
-    datePreferenceView = view.datePreferenceView;
+    userPreference = require('./UserPrefernce.js'),
+    view = require('./View.js');
 
 let
     serverURL = process.env.serverURL || config.serverURL,
-    listViewDetails = apiWebHook.listViewDetails,
     preffered_train = userPreference.preferedTrain,
-    searchParameters = apiWebHook.searchParameters,
-    showJourneyList = journeyList.showJourneyList,
-    getSearchURL = journeyList.getSearchURL;
+    purposeSlideView = view.purposeSlideView,
+    timePreferenceView = view.timePreferenceView,
+    travelPreferenceView = view.travelPreferenceView,
+    datePreferenceView = view.datePreferenceView,
+    getSchedule = require('./GetTrainlineScheduleView.js').getSchedule;
 
-function getFacebookFormattedReply(response) {
-    let aiText = response.result.fulfillment.speech;
-    let action = response.result.action;
-    console.log(response.result.parameters);
-    if(action.indexOf("greetings.") > -1 || action.indexOf("purpose") > -1) {
+function getFacebookFormattedReply(aiText, action) {
+    if (action.indexOf("greetings.") > -1 || action.indexOf("purpose") > -1) {
         return {
-            "text":aiText,
-            "quick_replies":[
+            "text": aiText,
+            "quick_replies": [
                 {
                     "content_type": "text",
                     "title": "What can I do?",
@@ -41,7 +32,7 @@ function getFacebookFormattedReply(response) {
                 }]
         }
     }
-    if(action.indexOf("options") > -1) {
+    if (action.indexOf("options") > -1) {
         return purposeSlideView;
     }
     if (aiText === 'Ask Date') {
@@ -51,22 +42,7 @@ function getFacebookFormattedReply(response) {
         return timePreferenceView;
     }
     if (aiText === "Schedule") {
-        return {
-            attachment: {
-                "type": "template",
-                "payload": {
-                    "template_type": "list",
-                    "elements": showJourneyList(listViewDetails),
-                    "buttons": [
-                        {
-                            "title": "View More",
-                            "type": "web_url",
-                            "url": getSearchURL(searchParameters)
-                        }
-                    ]
-                }
-            }
-        };
+        return getSchedule();
     }
     if (aiText === "Confirm") {
         return {
@@ -95,9 +71,8 @@ function getFacebookFormattedReply(response) {
     }
     return {
         text: aiText
-    }
+    };
 }
-
 function sendMessage(sender, text) {
     console.log("Sender: " + sender + "; Mesage: " + text);
     let apiai = apiaiApp.textRequest(text, {
@@ -111,7 +86,7 @@ function sendMessage(sender, text) {
             method: 'POST',
             json: {
                 recipient: {id: sender},
-                message:travelPreferenceView
+                message: travelPreferenceView
             }
         }, (error, resp) => {
             if (error) {
@@ -119,14 +94,16 @@ function sendMessage(sender, text) {
             } else if (resp.body.error) {
                 console.log('Error: ', resp.body.error);
             }
-            else{
+            else {
                 console.log("Success");
             }
         });
     }
 
     apiai.on('response', (response) => {
-        let customResponse = getFacebookFormattedReply(response);
+        let aiText = response.result.fulfillment.speech;
+        let action = response.result.action;
+        let customResponse = getFacebookFormattedReply(aiText, action);
         let options = {
             url: 'https://graph.facebook.com/v2.6/me/messages',
             qs: {access_token: 'EAAPfT94PkckBAPqY1ZAFgtMecs7hRQnF4bgh7yu1xeBft4pKx7wVgwldZCangBx6PYPInwwTkL6ZBaL64gLCT7PBrwyqBllS2eYnv2eJBGRgMZAKnh1X8volYUaaCDPZCnLVLAcalF9EV96VLVlG8iGQuqZAQey8dqk0zDLyROMgZDZD'},
@@ -142,7 +119,7 @@ function sendMessage(sender, text) {
             } else if (res.body.error) {
                 console.log('Error: ', res.body.error);
             }
-            else if(response.result.fulfillment.speech==="Schedule") {
+            else if (aiText === "Schedule") {
                 preferenceQuickReply();
             }
         });
@@ -155,7 +132,7 @@ function sendMessage(sender, text) {
     apiai.end();
 }
 
-function senderAction(sender,text) {
+function senderAction(sender, text) {
     request({
         url: 'https://graph.facebook.com/v2.6/me/messages',
         qs: {access_token: 'EAAPfT94PkckBAPqY1ZAFgtMecs7hRQnF4bgh7yu1xeBft4pKx7wVgwldZCangBx6PYPInwwTkL6ZBaL64gLCT7PBrwyqBllS2eYnv2eJBGRgMZAKnh1X8volYUaaCDPZCnLVLAcalF9EV96VLVlG8iGQuqZAQey8dqk0zDLyROMgZDZD'},
@@ -170,8 +147,8 @@ function senderAction(sender,text) {
         } else if (response.body.error) {
             console.log('Error: ', response.body.error);
         }
-        else{
-            sendMessage(sender,text);
+        else {
+            sendMessage(sender, text);
         }
     });
 }

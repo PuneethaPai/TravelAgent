@@ -9,7 +9,7 @@ const
     facebookReply = require('./src/FacebookReply.js');
 
 const
-    fastrackSummaryDetails = apiWebHook.fastrackSummaryDetails,
+    fastrackSummaryDetails = require('./src/GetTrainlineScheduleView.js').fastrackSummaryDetails,
     apiWebHookHandler = apiWebHook.apiWebHookHandler,
     senderAction = facebookReply.senderAction;
 

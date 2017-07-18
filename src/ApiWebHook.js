@@ -10,9 +10,9 @@ const
     };
 
 let
-    fastrackSummaryDetails = {},
-    listViewDetails = {},
-    searchParameters = {};
+    listViewDetails = require('./GetTrainlineScheduleView.js').listViewDetails,
+    searchParameters = {},
+    journey = {};
 
 
 function apiWebHookHandler(req, res) {
@@ -36,7 +36,7 @@ function apiWebHookHandler(req, res) {
         date = parameters['journey-date'],
         seat = parseInt(parameters['seats'], 10);
 
-    if (action === 'fetch_schedule'){
+    if (action === 'fetch_schedule') {
         if (source !== "") {
             validate(source, "Source");
         }
@@ -73,11 +73,9 @@ function apiWebHookHandler(req, res) {
         if (source !== "" && destination !== "" && date !== "" && journeyTime !== "") {
             let source_code = stations[source.toUpperCase()];
             let destination_code = stations[destination.toUpperCase()];
-            listViewDetails.source = source;
-            listViewDetails.destination = destination;
-            listViewDetails.date = date;
-            listViewDetails.seats = seat;
 
+            journey.source = source;
+            journey.destination = destination;
             searchParameters.origin = source_code;
             searchParameters.destination = destination_code;
             searchParameters.outboundDate = date;
@@ -99,36 +97,7 @@ function apiWebHookHandler(req, res) {
             request(options, (err, response) => {
                 if (!err && response.statusCode === 200) {
                     let json = JSON.parse(response.body);
-                    let journeys = json.OutboundJournies;
-                    let list_len = journeys.length;
-                    let summaryList = [];
-                    let listViewList = [];
-                    for (let i = 0; i < list_len; i++) {
-                        let tripSummary = {};
-                        let listViewData = {};
-                        let train_data = journeys[i].Legs;
-                        tripSummary.origin_crs = source_code;
-                        tripSummary.destination_crs = destination_code;
-                        tripSummary.arrival_date_time = journeys[i].ArrivalDateTime;
-                        tripSummary.departure_date_time = journeys[i].DepartureDateTime;
-                        tripSummary.seats = journeys[i].Tickets[0].Adults.Number;
-                        tripSummary.total_fare = journeys[i].Tickets[0].Total;
-                        tripSummary.ticket_type = journeys[i].Tickets[0].TicketType;
-                        tripSummary.route_code = journeys[i].Tickets[0].RouteCode;
-
-                        listViewData.start = train_data[0].OriginDepartureTime.toString();
-                        listViewData.end = train_data[0].DestinationArrivalTime.toString();
-                        listViewData.duration = train_data[0].Duration.toString();
-                        listViewData.fare = journeys[i].Tickets[0].Fare.toString();
-
-                        summaryList.push(tripSummary);
-                        listViewList.push(listViewData);
-                    }
-                    listViewDetails.journeyList = listViewList;
-                    fastrackSummaryDetails.summaryList = summaryList;
-
-                    console.log("Obtained Schedule:-");
-                    console.log(listViewDetails);
+                    journey.summary = json.OutboundJournies;
                     return res.json({
                         speech: "Schedule",
                         displayText: "Schedule",
@@ -154,8 +123,7 @@ function apiWebHookHandler(req, res) {
 }
 
 module.exports = {
-    fastrackSummaryDetails: fastrackSummaryDetails,
-    listViewDetails: listViewDetails,
     apiWebHookHandler: apiWebHookHandler,
-    searchParameters: searchParameters
+    searchParameters: searchParameters,
+    journey: journey
 };
