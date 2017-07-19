@@ -17,11 +17,12 @@ let
 
 function apiWebHookHandler(req, res) {
 
-    function validate(stationName, Label) {
-        if (!stations[stationName.toUpperCase()]) {
+    function validate(stationName) {
+        let station = stationName.toUpperCase();
+        if (!stations[station]) {
             return res.json({
-                speech: "The " + Label + " is Incorrect",
-                displayText: "The " + Label + " is Incorrect",
+                speech: "The " + station + " is not a Valid UK Station",
+                displayText: "The " + station + " is not a Valid UK Station",
                 source: 'fetch_schedule'
             });
         }
@@ -38,10 +39,10 @@ function apiWebHookHandler(req, res) {
 
     if (action === 'fetch_schedule') {
         if (source !== "") {
-            validate(source, "Source");
+            validate(source);
         }
         if (destination !== "") {
-            validate(destination, "Destination");
+            validate(destination);
         }
         if (source !== "" && destination !== "") {
             let source_code = stations[source.toUpperCase()];
@@ -54,15 +55,16 @@ function apiWebHookHandler(req, res) {
                 });
             }
         }
-        if (source !== "" && destination !== "" && date === "") {
+        if (date === "" || !/^[2][0][1][7]-(0[1-9]|1[0-2])-(0[1-9]|[1-2]\d|3[0-1])$/.test(date)) {
             console.log("Ask date");
+            date = "";
             return res.json({
                 speech: "Ask Date",
                 displayText: "Ask Date",
                 source: 'fetch_schedule'
             });
         }
-        if (source !== "" && destination !== "" && date !== "" && journeyTime === undefined) {
+        if (journeyTime === undefined) {
             console.log("Ask Time");
             return res.json({
                 speech: "Ask Time",
@@ -70,49 +72,48 @@ function apiWebHookHandler(req, res) {
                 source: 'fetch_schedule'
             });
         }
-        if (source !== "" && destination !== "" && date !== "" && journeyTime !== "") {
-            let source_code = stations[source.toUpperCase()];
-            let destination_code = stations[destination.toUpperCase()];
 
-            journey.source = source;
-            journey.destination = destination;
-            searchParameters.origin = source_code;
-            searchParameters.destination = destination_code;
-            searchParameters.outboundDate = date;
-            searchParameters.outboundTime = journeyTime;
-            searchParameters.numberOfAdults = seat;
-            console.log("Search Parameters:-");
-            console.log(searchParameters);
-            let options = {
-                url: 'https://et2-fasttrackapi.ttlnonprod.com/v1/Search',
-                method: 'GET',
-                qs: {
-                    'journeyRequest': searchParameters
-                },
-                headers: {
-                    "Accept": "application/json",
-                    "TocIdentifier": "vtMobileWeb"
-                }
-            };
-            request(options, (err, response) => {
-                if (!err && response.statusCode === 200) {
-                    let json = JSON.parse(response.body);
-                    journey.summary = json.OutboundJournies;
-                    return res.json({
-                        speech: "Schedule",
-                        displayText: "Schedule",
-                        source: 'fetch_schedule'
-                    });
-                } else {
-                    return res.status(400).json({
-                        status: {
-                            code: 400,
-                            errorType: 'I failed to look up the Schedule'
-                        }
-                    });
-                }
-            })
-        }
+        let source_code = stations[source.toUpperCase()];
+        let destination_code = stations[destination.toUpperCase()];
+        journey.source = source;
+        journey.destination = destination;
+        searchParameters.origin = source_code;
+        searchParameters.destination = destination_code;
+        searchParameters.outboundDate = date;
+        searchParameters.outboundTime = journeyTime;
+        searchParameters.numberOfAdults = seat;
+        console.log("Search Parameters:-");
+        console.log(searchParameters);
+        let options = {
+            url: 'https://et2-fasttrackapi.ttlnonprod.com/v1/Search',
+            method: 'GET',
+            qs: {
+                'journeyRequest': searchParameters
+            },
+            headers: {
+                "Accept": "application/json",
+                "TocIdentifier": "vtMobileWeb"
+            }
+        };
+        request(options, (err, response) => {
+            if (!err && response.statusCode === 200) {
+                let json = JSON.parse(response.body);
+                journey.summary = json.OutboundJournies;
+                return res.json({
+                    speech: "Schedule",
+                    displayText: "Schedule",
+                    source: 'fetch_schedule'
+                });
+            } else {
+                console.log("Failed to get Schedule");
+                return res.status(400).json({
+                    status: {
+                        code: 400,
+                        errorType: 'I failed to look up the Schedule'
+                    }
+                });
+            }
+        });
     }
 
     let preference = parameters['Preferences'];
