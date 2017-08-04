@@ -1,6 +1,4 @@
 const
-    ClientAccessToken = '80008143ef7e426e8ae929fa186012b3',
-    apiaiApp = require('apiai')(ClientAccessToken),
     request = require('request'),
     config = require('config'),
     userPreference = require('./UserPrefernce.js'),
@@ -8,6 +6,9 @@ const
 
 let
     serverURL = process.env.serverURL || config.serverURL,
+    pageAccessToken = process.env.pageAccessToken || config.pageAccessToken,
+    ClientAccessToken = process.env.clientAccessToken || config.clientAccessToken,
+    apiaiApp = require('apiai')(ClientAccessToken),
     preffered_train = userPreference.preferedTrain,
     purposeSlideView = view.purposeSlideView,
     timePreferenceView = view.timePreferenceView,
@@ -82,7 +83,7 @@ function sendMessage(sender, text) {
     function preferenceQuickReply() {
         request({
             url: 'https://graph.facebook.com/v2.6/me/messages',
-            qs: {access_token: 'EAAPfT94PkckBAPqY1ZAFgtMecs7hRQnF4bgh7yu1xeBft4pKx7wVgwldZCangBx6PYPInwwTkL6ZBaL64gLCT7PBrwyqBllS2eYnv2eJBGRgMZAKnh1X8volYUaaCDPZCnLVLAcalF9EV96VLVlG8iGQuqZAQey8dqk0zDLyROMgZDZD'},
+            qs: {access_token: pageAccessToken},
             method: 'POST',
             json: {
                 recipient: {id: sender},
@@ -106,7 +107,7 @@ function sendMessage(sender, text) {
         let customResponse = getFacebookFormattedReply(aiText, action);
         let options = {
             url: 'https://graph.facebook.com/v2.6/me/messages',
-            qs: {access_token: 'EAAPfT94PkckBAPqY1ZAFgtMecs7hRQnF4bgh7yu1xeBft4pKx7wVgwldZCangBx6PYPInwwTkL6ZBaL64gLCT7PBrwyqBllS2eYnv2eJBGRgMZAKnh1X8volYUaaCDPZCnLVLAcalF9EV96VLVlG8iGQuqZAQey8dqk0zDLyROMgZDZD'},
+            qs: {access_token: pageAccessToken},
             method: 'POST',
             json: {
                 recipient: {id: sender},
@@ -135,7 +136,7 @@ function sendMessage(sender, text) {
 function senderAction(sender, text) {
     request({
         url: 'https://graph.facebook.com/v2.6/me/messages',
-        qs: {access_token: 'EAAPfT94PkckBAPqY1ZAFgtMecs7hRQnF4bgh7yu1xeBft4pKx7wVgwldZCangBx6PYPInwwTkL6ZBaL64gLCT7PBrwyqBllS2eYnv2eJBGRgMZAKnh1X8volYUaaCDPZCnLVLAcalF9EV96VLVlG8iGQuqZAQey8dqk0zDLyROMgZDZD'},
+        qs: {access_token: pageAccessToken},
         method: 'POST',
         json: {
             recipient: {id: sender},

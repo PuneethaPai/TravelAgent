@@ -14,7 +14,7 @@ const
     senderAction = facebookReply.senderAction;
 
 const app = express();
-const ClientValidationToken = config.get('validationToken');
+const ClientValidationToken = process.env.validationToken || config.validationToken;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
