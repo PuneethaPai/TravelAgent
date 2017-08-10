@@ -1,0 +1,29 @@
+{
+  "name": "TravelAgent",
+  "scripts": {
+  },
+  "env": {
+    "clientAccessToken": {
+      "required": true
+    },
+    "pageAccessToken": {
+      "required": true
+    },
+    "serverURL": {
+      "required": true
+    },
+    "validationToken": {
+      "required": true
+    }
+  },
+  "formation": {
+  },
+  "addons": [
+
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+}
