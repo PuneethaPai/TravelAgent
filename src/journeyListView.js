@@ -14,11 +14,11 @@ function showJourneyList(ListViewData) {
     };
     elementList.push(banner);
     for (let i = 0; i < 3; i++) {
-        let url = serverURL + "summary?q=";
+        let url = serverURL + "summary";
         let totalFare = parseInt(journeys[i].fare, 10) * ListViewData.seats;
         format = {
-            "title": journeys[i].duration.toString(),
-            "subtitle": "Start:" + journeys[i].start + "\n" + "End:" + journeys[i].end + "\n" + "Total Fare: £" + totalFare + "\n",
+            "title": journeys[i].start,
+            "subtitle": "Duration : " + journeys[i].duration.toString() + "\n"+ "Total Fare: Rs. " + totalFare + "\n",
             "buttons": [
                 {
                     "title": "Book",
@@ -31,18 +31,6 @@ function showJourneyList(ListViewData) {
     }
     return elementList;
 }
-
-function getSearchURL(searchParameters) {
-    let searchURL = "https://et2-m-virgintrains.ttlnonprod.com/dataPassedIn?Origin=" +
-        searchParameters.origin + "&Destination=" +
-        searchParameters.destination + "&OutboundDate=" +
-        searchParameters.outboundDate + "&OutboundTime=" +
-        searchParameters.outboundTime + "&NumberOfAdults=" +
-        searchParameters.numberOfAdults;
-    console.log("Schedule sent with URL:-" + searchURL);
-    return searchURL;
-}
 module.exports = {
     showJourneyList: showJourneyList,
-    getSearchURL: getSearchURL
 };

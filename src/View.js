@@ -17,25 +17,14 @@ let purposeSlideView = {
                     ]
                 },
                 {
-                    "title": "Show Upcoming Trains to London",
+                    "title": "Show Upcoming Trains to Mumbai",
                     "image_url": "https://us.123rf.com/450wm/jemastock/jemastock1510/jemastock151001176/47322629-london-concept-with-landmarks-icons-design.jpg?ver=6",
-                    "subtitle": "London, A great destination!",
+                    "subtitle": "Mumbai, A great destination!",
                     "buttons": [
                         {
                             "type": "postback",
                             "title": "Yes Go!",
-                            "payload": "Book me a ticket today afternoon to London"
-                        }
-                    ]
-                }, {
-                    "title": "About Virgin Trains",
-                    "image_url": "http://www.2120580.cloudcommercepro.com/wp-content/uploads/2017/04/virgin.png",
-                    "subtitle": "We’re on a mission to make every second you spend with us awesome",
-                    "buttons": [
-                        {
-                            "type": "web_url",
-                            "title": "Know More",
-                            "url": "https://www.virgintrains.co.uk/about",
+                            "payload": "Book me a ticket today afternoon to Mumbai"
                         }
                     ]
                 }

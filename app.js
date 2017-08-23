@@ -4,12 +4,10 @@ const
     bodyParser = require('body-parser'),
     config = require('config'),
     express = require('express'),
-    data = require('./src/data.js'),
     apiWebHook = require('./src/ApiWebHook.js'),
     facebookReply = require('./src/FacebookReply.js');
 
 const
-    fastrackSummaryDetails = require('./src/GetTrainlineScheduleView.js').fastrackSummaryDetails,
     apiWebHookHandler = apiWebHook.apiWebHookHandler,
     senderAction = facebookReply.senderAction;
 
@@ -34,13 +32,7 @@ app.get('/webhook', (req, res) => {
     }
 });
 app.get('/summary', function (req, res) {
-    let index = parseInt(req.query.q, 10);
-
-    let html_data = "<title>Journey Summary</title><form id='redir' action='https://et2-m-virgintrains.ttlnonprod.com/buy/purchase_ticket_request' method='POST'>" +
-        "<textarea rows='15' cols='50' name='journey' style='display: none'>" + data.getPostData(fastrackSummaryDetails.summaryList[index]).toString() +
-        "</textarea>" +
-        "</form>" +
-        "<script>document.getElementById('redir').submit()</script>";
+    let html_data = "<title>Journey Summary</title><p>Hi</p>>";
     res.send(html_data);
 });
 

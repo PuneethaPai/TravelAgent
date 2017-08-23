@@ -13,42 +13,24 @@ function getSchedule() {
     let
         journey = apiWebhook.journey,
         searchParameters = apiWebhook.searchParameters,
-        showJourneyList = journeyList.showJourneyList,
-        getSearchURL = journeyList.getSearchURL;
+        showJourneyList = journeyList.showJourneyList;
 
-    let list_len = journey.summary.length;
-    let summaryList = [];
+    let list_len = journey.schedule.length;
     let listViewList = [];
     listViewDetails.source = journey.source;
     listViewDetails.destination = journey.destination;
-    listViewDetails.date = searchParameters.outboundDate;
+    listViewDetails.date = searchParameters.date;
     listViewDetails.seats =searchParameters.numberOfAdults;
 
     for (let i = 0; i < list_len; i++) {
-        let tripSummary = {};
         let listViewData = {};
-        let train_data = journey.summary[i].Legs;
-        tripSummary.origin_crs = searchParameters.origin;
-        tripSummary.destination_crs = searchParameters.destination;
-        tripSummary.arrival_date_time = journey.summary[i].ArrivalDateTime;
-        tripSummary.departure_date_time = journey.summary[i].DepartureDateTime;
-        tripSummary.seats = journey.summary[i].Tickets[0].Adults.Number;
-        tripSummary.total_fare = journey.summary[i].Tickets[0].Total;
-        tripSummary.ticket_type = journey.summary[i].Tickets[0].TicketType;
-        tripSummary.route_code = journey.summary[i].Tickets[0].RouteCode;
-
-        listViewData.start = train_data[0].OriginDepartureTime.toString();
-        listViewData.end = train_data[0].DestinationArrivalTime.toString();
-        listViewData.duration = train_data[0].Duration.toString();
-        listViewData.fare = journey.summary[i].Tickets[0].Fare.toString();
-
-        summaryList.push(tripSummary);
+        listViewData.start = journey.schedule[i].time.toString();
+        listViewData.duration = journey.schedule[i].duration.toString();
+        listViewData.fare = journey.schedule[i].cost.toString();
         listViewList.push(listViewData);
-
     }
 
     listViewDetails.journeyList = listViewList;
-    fastrackSummaryDetails.summaryList = summaryList;
 
     console.log("Obtained Schedule:-");
     console.log(listViewDetails);
@@ -57,14 +39,7 @@ function getSchedule() {
             "type": "template",
             "payload": {
                 "template_type": "list",
-                "elements": showJourneyList(listViewDetails),
-                "buttons": [
-                    {
-                        "title": "View More",
-                        "type": "web_url",
-                        "url": getSearchURL(searchParameters)
-                    }
-                ]
+                "elements": showJourneyList(listViewDetails)
             }
         }
     };

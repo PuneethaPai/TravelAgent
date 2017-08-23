@@ -3,10 +3,10 @@ const
     stations = require("../assets/stations.json"),
     extractUserPreferenceTrain = require('./UserPrefernce.js').extractUserPreferedTrain,
     dayTimeMap = {
-        "morning": '06-00',
-        "afternoon": '12-00',
-        "evening": '16-00',
-        "night": '20-00'
+        "morning": '06:00',
+        "afternoon": '12:00',
+        "evening": '16:00',
+        "night": '20:00'
     };
 
 let
@@ -18,11 +18,11 @@ let
 function apiWebHookHandler(req, res) {
 
     function validate(stationName) {
-        let station = stationName.toUpperCase();
+        let station = stationName.toLowerCase();
         if (!stations[station]) {
             return res.json({
-                speech: "The " + station + " is not a Valid UK Station",
-                displayText: "The " + station + " is not a Valid UK Station",
+                speech: "The " + station + " is not a Valid Station",
+                displayText: "The " + station + " is not a Valid Station",
                 source: 'fetch_schedule'
             });
         }
@@ -45,8 +45,8 @@ function apiWebHookHandler(req, res) {
             validate(destination);
         }
         if (source !== "" && destination !== "") {
-            let source_code = stations[source.toUpperCase()];
-            let destination_code = stations[destination.toUpperCase()];
+            let source_code = stations[source.toLowerCase()];
+            let destination_code = stations[destination.toLowerCase()];
             if (destination_code === source_code) {
                 return res.json({
                     speech: "Great I guess You Are Already There\nHave a great time",
@@ -73,32 +73,28 @@ function apiWebHookHandler(req, res) {
             });
         }
 
-        let source_code = stations[source.toUpperCase()];
-        let destination_code = stations[destination.toUpperCase()];
+        let source_code = stations[source.toLowerCase()];
+        let destination_code = stations[destination.toLowerCase()];
         journey.source = source;
         journey.destination = destination;
-        searchParameters.origin = source_code;
+        searchParameters.source = source_code;
         searchParameters.destination = destination_code;
-        searchParameters.outboundDate = date;
-        searchParameters.outboundTime = journeyTime;
+        searchParameters.date = date;
+        searchParameters.time = journeyTime;
         searchParameters.numberOfAdults = seat;
         console.log("Search Parameters:-");
         console.log(searchParameters);
+        let url = "https://train-travel-flask.herokuapp.com/schedule/?source="+source_code+"&destination="+destination_code+"&day="+date+"&time="+journeyTime+"&seats=4";
+        console.log(url);
         let options = {
-            url: 'https://et2-fasttrackapi.ttlnonprod.com/v1/Search',
+            url: url,
             method: 'GET',
-            qs: {
-                'journeyRequest': searchParameters
-            },
-            headers: {
-                "Accept": "application/json",
-                "TocIdentifier": "vtMobileWeb"
-            }
         };
         request(options, (err, response) => {
             if (!err && response.statusCode === 200) {
                 let json = JSON.parse(response.body);
-                journey.summary = json.OutboundJournies;
+                journey.schedule = json.schedule;
+                console.log(journey.schedule);
                 return res.json({
                     speech: "Schedule",
                     displayText: "Schedule",

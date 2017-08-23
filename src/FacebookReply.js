@@ -53,13 +53,13 @@ function getFacebookFormattedReply(aiText, action) {
                     "template_type": "generic",
                     "elements": [
                         {
-                            "title": preffered_train.duration,
-                            "subtitle": "Start:" + preffered_train.start + "\n" + "End:" + preffered_train.end + "\n" + "Total Fare: £" + preffered_train.fare + "\n",
+                            "title":preffered_train.start ,
+                            "subtitle": "Duration : " + preffered_train.duration+ "\n" + "Total Fare: Rs. " + preffered_train.fare + "\n",
                             "image_url": "https://invitationdigital-res-2.cloudinary.com/image/upload/f_auto,fl_strip_profile,w_628,c_crop/w_628,h_384,c_fill/trainline_up_to_43_off_tickets_with_advance_bookings_at_trainline_premium_offer_image.jpg",
                             "buttons": [
                                 {
                                     "type": "web_url",
-                                    "url": serverURL + "summary?q=" + preffered_train.index,
+                                    "url": serverURL+"book",
                                     "title": "Book"
                                 }
                             ]
