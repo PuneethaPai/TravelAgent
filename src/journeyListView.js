@@ -14,7 +14,8 @@ function showJourneyList(ListViewData) {
     };
     elementList.push(banner);
     for (let i = 0; i < 3; i++) {
-        let url = serverURL + "summary";
+        let url = serverURL + "book/?source="+ListViewData.source+"&destination="+ListViewData.destination+"&day="+date+"&dept_time="+journeys[i].start+"&duration="+journeys[i].duration+"&seat="+ListViewData.seats+"";
+        console.log(url);
         let totalFare = parseInt(journeys[i].fare, 10) * ListViewData.seats;
         format = {
             "title": journeys[i].start,
@@ -23,7 +24,7 @@ function showJourneyList(ListViewData) {
                 {
                     "title": "Book",
                     "type": "web_url",
-                    "url": url + i,
+                    "url": url,
                 }
             ]
         };

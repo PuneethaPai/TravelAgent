@@ -1,11 +1,14 @@
 let preferedTrain = {};
-function extractUserPreferedTrain(summary, preference) {
+function extractUserPreferedTrain(listViewData, preference) {
     function PreferenceDetailExtract(index) {
-        preferedTrain.start = summary.journeyList[index].start;
-        preferedTrain.end = summary.journeyList[index].end;
-        preferedTrain.duration = summary.journeyList[index].duration;
-        preferedTrain.fare = parseInt(summary.journeyList[index].fare, 10) * summary.seats;
-        preferedTrain.index = index;
+        let date = new Date(listViewData.date).toDateString();
+        preferedTrain.source=listViewData.source;
+        preferedTrain.destination=listViewData.destination;
+        preferedTrain.seats=listViewData.seats;
+        preferedTrain.date=date;
+        preferedTrain.start = listViewData.journeyList[index].start;
+        preferedTrain.duration = listViewData.journeyList[index].duration;
+        preferedTrain.fare = parseInt(listViewData.journeyList[index].fare, 10) * listViewData.seats;
         console.log(preferedTrain);
         return {
             speech: "Confirm",
@@ -14,7 +17,7 @@ function extractUserPreferedTrain(summary, preference) {
         };
     }
 
-    let itin_length = summary.journeyList.length;
+    let itin_length = listViewData.journeyList.length;
 
     if (preference === "earliest") {
         return PreferenceDetailExtract(0);
@@ -23,7 +26,7 @@ function extractUserPreferedTrain(summary, preference) {
         let min_cost = 1000;
         let cheapest = 0;
         for (i = 0; i < itin_length; i++) {
-            let train = summary.journeyList[i];
+            let train = listViewData.journeyList[i];
             let cost = parseInt(train.fare, 10);
             if (min_cost > cost) {
                 min_cost = cost;
@@ -36,7 +39,7 @@ function extractUserPreferedTrain(summary, preference) {
         let min_dur = 1000;
         let fastest = 0;
         for (i = 0; i < itin_length; i++) {
-            let train = summary.journeyList[i];
+            let train = listViewData.journeyList[i];
 
             let hr="0";
             let min="0";

@@ -6,7 +6,7 @@ let purposeSlideView = {
             "elements": [
                 {
                     "title": "Plan My Journey",
-                    "image_url": "https://invitationdigital-res-2.cloudinary.com/image/upload/f_auto,fl_strip_profile,w_628,c_crop/w_628,h_384,c_fill/trainline_up_to_43_off_tickets_with_advance_bookings_at_trainline_premium_offer_image.jpg",
+                    "image_url": "https://foto.haberler.com/haber/2017/03/17/tren-rayina-tuzaklanan-120-kilogram-patlayici-imha-9384574_2447_o.jpg",
                     "subtitle": "Travel with us!",
                     "buttons": [
                         {
@@ -17,14 +17,14 @@ let purposeSlideView = {
                     ]
                 },
                 {
-                    "title": "Show Upcoming Trains to Mumbai",
-                    "image_url": "https://us.123rf.com/450wm/jemastock/jemastock1510/jemastock151001176/47322629-london-concept-with-landmarks-icons-design.jpg?ver=6",
-                    "subtitle": "Mumbai, A great destination!",
+                    "title": "Show Upcoming Trains to Goa",
+                    "image_url": "https://twosomelife.com/wp-content/uploads/2016/04/twosomelife_goa.jpg",
+                    "subtitle": "A Perfect Holiday Destination !!",
                     "buttons": [
                         {
                             "type": "postback",
                             "title": "Yes Go!",
-                            "payload": "Book me a ticket today afternoon to Mumbai"
+                            "payload": "Book me a ticket today afternoon to Panjim"
                         }
                     ]
                 }
