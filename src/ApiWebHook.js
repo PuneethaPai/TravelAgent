@@ -1,5 +1,6 @@
 const
     request = require('request'),
+    config = require('config'),
     stations = require("../assets/stations.json"),
     extractUserPreferenceTrain = require('./UserPrefernce.js').extractUserPreferedTrain,
     dayTimeMap = {
@@ -10,6 +11,7 @@ const
     };
 
 let
+    serverURL = process.env.serverURL || config.serverURL,
     listViewDetails = require('./GetTrainlineScheduleView.js').listViewDetails,
     searchParameters = {},
     journey = {};
@@ -84,7 +86,7 @@ function apiWebHookHandler(req, res) {
         searchParameters.numberOfAdults = seat;
         console.log("Search Parameters:-");
         console.log(searchParameters);
-        let url = "https://train-travel-flask.herokuapp.com/schedule/?source="+source_code+"&destination="+destination_code+"&day="+date+"&time="+journeyTime+"&seats=4";
+        let url = serverURL + "schedule/?source=" + source_code + "&destination=" + destination_code + "&day=" + date + "&time=" + journeyTime + "&seats=" + seat;
         console.log(url);
         let options = {
             url: url,
@@ -94,7 +96,6 @@ function apiWebHookHandler(req, res) {
             if (!err && response.statusCode === 200) {
                 let json = JSON.parse(response.body);
                 journey.schedule = json.schedule;
-                console.log(journey.schedule);
                 return res.json({
                     speech: "Schedule",
                     displayText: "Schedule",

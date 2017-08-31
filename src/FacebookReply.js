@@ -46,7 +46,7 @@ function getFacebookFormattedReply(aiText, action) {
         return getSchedule();
     }
     if (aiText === "Confirm") {
-        url=serverURL+"book/?source="+preffered_train.source+"&destination="+preffered_train.destination+"&day="+preffered_train.date+"&dept_time="+preffered_train.start+"&duration="+preffered_train.duration+"&seat="+preffered_train.seats+"";
+        url=serverURL+"book/?source="+preffered_train.source+"&destination="+preffered_train.destination+"&day="+preffered_train.date+"&time="+preffered_train.start+"&duration="+preffered_train.duration+"&total_cost="+preffered_train.fare+"&seat="+preffered_train.seats;
         console.log(url);
         return {
             attachment: {

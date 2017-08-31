@@ -14,12 +14,12 @@ function showJourneyList(ListViewData) {
     };
     elementList.push(banner);
     for (let i = 0; i < 3; i++) {
-        let url = serverURL + "book/?source="+ListViewData.source+"&destination="+ListViewData.destination+"&day="+date+"&dept_time="+journeys[i].start+"&duration="+journeys[i].duration+"&seat="+ListViewData.seats+"";
-        console.log(url);
         let totalFare = parseInt(journeys[i].fare, 10) * ListViewData.seats;
+        url = serverURL + "book/?source=" + ListViewData.source + "&destination=" + ListViewData.destination + "&day=" + date + "&time=" + journeys[i].start + "&duration=" + journeys[i].duration + "&total_cost=" + totalFare + "&seat=" + ListViewData.seats;
+        console.log(url);
         format = {
             "title": journeys[i].start,
-            "subtitle": "Duration : " + journeys[i].duration.toString() + "\n"+ "Total Fare: Rs. " + totalFare + "\n",
+            "subtitle": "Duration : " + journeys[i].duration.toString() + "\n" + "Total Fare: Rs. " + totalFare + "\n",
             "buttons": [
                 {
                     "title": "Book",
