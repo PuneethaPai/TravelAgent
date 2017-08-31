@@ -31,10 +31,6 @@ app.get('/webhook', (req, res) => {
         res.status(403).end();
     }
 });
-app.get('/summary', function (req, res) {
-    let html_data = "<title>Journey Summary</title><p>Hi</p>>";
-    res.send(html_data);
-});
 
 /* Handling all messenges */
 app.post('/webhook', (req, res) => {
@@ -51,7 +47,7 @@ app.post('/webhook', (req, res) => {
                 let sender = event.sender.id;
                 let text = getText(event);
                 if (text) {
-                    senderAction(sender,text);
+                    senderAction(sender, text);
                 }
             });
         });
